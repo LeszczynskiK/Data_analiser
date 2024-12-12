@@ -109,6 +109,24 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     showDataButton->setGeometry(295, 10, 275, 70);
     connect(showDataButton, &QPushButton::clicked, this, &mainapp::displaySelectedData);
 
+    plotterButton = new QPushButton("Plotter", this);
+    plotterButton->setFont(font);
+    plotterButton->setStyleSheet("color: yellow;");
+    plotterButton->setGeometry(10, 380, 275, 70);
+    connect(plotterButton, &QPushButton::clicked, this, &mainapp::plotter_page);
+
+    stats1Button = new QPushButton("Math stats I", this);
+    stats1Button->setFont(font);
+    stats1Button->setStyleSheet("color: yellow;");
+    stats1Button->setGeometry(10, 470, 275, 70);
+    connect(stats1Button, &QPushButton::clicked, this, &mainapp::stats1_page);
+
+    stats2Button = new QPushButton("Math stats II", this);
+    stats2Button->setFont(font);
+    stats2Button->setStyleSheet("color: yellow;");
+    stats2Button->setGeometry(10, 560, 275, 70);
+    connect(stats2Button, &QPushButton::clicked, this, &mainapp::stats2_page);
+
 
 }
 
@@ -204,6 +222,27 @@ void mainapp::displaySelectedData() {
 
     dataDisplay->clear();
     dataDisplay->setText(lines.join("\n"));//display data separately
+}
+
+void mainapp::stats1_page()
+{
+    stats1* stat1 = new stats1();
+    stat1->show();
+    this->close();
+}
+
+void mainapp::stats2_page()
+{
+    stats2* stat2 = new stats2();
+    stat2->show();
+    this->close();
+}
+
+void mainapp::plotter_page()
+{
+    plotter* plott = new plotter();
+    plott->show();
+    this->close();
 }
 
 

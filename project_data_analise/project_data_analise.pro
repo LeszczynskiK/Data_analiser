@@ -11,11 +11,17 @@ CONFIG += c++17
 SOURCES += \
     authorisation_page.cpp \
     main.cpp \
-    mainapp.cpp
+    mainapp.cpp \
+    plotter.cpp \
+    stats1.cpp \
+    stats2.cpp
 
 HEADERS += \
     authorisation_page.h \
-    mainapp.h
+    mainapp.h \
+    plotter.h \
+    stats1.h \
+    stats2.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

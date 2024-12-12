@@ -2,6 +2,9 @@
 #define MAINAPP_H
 
 #include "authorisation_page.h"
+#include "stats1.h"
+#include "stats2.h"
+#include "plotter.h"
 
 #include <QWidget>
 #include <QLineEdit>
@@ -28,10 +31,13 @@ public:
 
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
-    void exitApp();
-    void selectFile();
-    void toggleDoubleColumn(bool var);
-    void displaySelectedData();
+    void exitApp();//exit app
+    void selectFile();//choose .csv
+    void toggleDoubleColumn(bool var);//switch between 1 or 2 columns alalisys
+    void displaySelectedData();//show data
+    void stats1_page();//go to page stats1
+    void stats2_page();//go to page stats2
+    void plotter_page();//go to plotter
 private:
     QPixmap background;//Background txt
     QPushButton *exit_button;//exit app
@@ -50,6 +56,9 @@ private:
     QRadioButton *doubleColumnRadio;//switch do 2 column data management
     QLineEdit *secondColumnInput;//number of column number two
     QPushButton *showDataButton;//display selected data
+    QPushButton *plotterButton;//plotting
+    QPushButton *stats1Button;//1st part of analisys
+    QPushButton *stats2Button;//2nd part of analisys
 
 };
 

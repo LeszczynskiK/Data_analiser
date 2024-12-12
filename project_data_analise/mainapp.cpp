@@ -101,7 +101,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
     dataDisplay->setFont(font);
     dataDisplay->setReadOnly(true);//only to read
-    dataDisplay->setStyleSheet("background-color: white; color: black;");//background colour and font colour
+    dataDisplay->setStyleSheet("background-color: white; border: 1px solid black;");//background colour and font colour
 
     showDataButton = new QPushButton("Show Data", this);
     showDataButton->setFont(font);

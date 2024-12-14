@@ -15,6 +15,9 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     QFont font;
     font.setPointSize(21);//Font size -all font size
 
+    QFont font_screen;
+    font_screen.setPointSize(14);//Font size -all font size
+
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);
     exit_button->setStyleSheet("color: yellow;");
@@ -99,9 +102,16 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     //display data field(screen)
     dataDisplay = new QTextEdit(this);
     dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
-    dataDisplay->setFont(font);
+    dataDisplay->setFont(font_screen);
     dataDisplay->setReadOnly(true);//only to read
-    dataDisplay->setStyleSheet("background-color: white; border: 1px solid black;");//background colour and font colour
+
+    //white background colour, black 1px wide frame around, black font of messages - display
+    dataDisplay->setStyleSheet("background-color: white;color: black; border: 1px solid black;");
+    dataDisplay->setText("You will see your data here, on the screen...");
+
+    dataDisplay->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with horisontal scroll
+    dataDisplay->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with vertical scroll
+    dataDisplay->setLineWrapMode(QTextEdit::NoWrap);//lines are no wrapping - the whole row is in one line
 
     showDataButton = new QPushButton("Show Data", this);
     showDataButton->setFont(font);
@@ -126,14 +136,12 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     stats2Button->setStyleSheet("color: yellow;");
     stats2Button->setGeometry(10, 560, 275, 70);
     connect(stats2Button, &QPushButton::clicked, this, &mainapp::stats2_page);
-
-
 }
 
 void mainapp::paintEvent(QPaintEvent *event) {
-    QPainter painter(this);
-    painter.drawPixmap(0, 0, background);//Background
     QWidget::paintEvent(event);
+    QPainter painter(this);
+    painter.drawPixmap(0, 0, background);//first draw background, later added elements on the background
 }
 
 void mainapp::exitApp()
@@ -150,6 +158,8 @@ void mainapp::selectFile()
 
     //Store the file path for further processing
     csvFilePath = filePath;
+    qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
+
 }
 
 void mainapp::toggleDoubleColumn(bool checked)
@@ -158,7 +168,7 @@ void mainapp::toggleDoubleColumn(bool checked)
     secondColumnLabel->setVisible(checked);
 }
 
-void mainapp::displaySelectedData() {
+void mainapp::displaySelectedData() {    
     if (csvFilePath.isEmpty()) {
         QMessageBox::warning(this, "Error", "Please select a CSV file first.");
         return;
@@ -170,6 +180,11 @@ void mainapp::displaySelectedData() {
     int secondColumn = secondColumnInput->text().toInt(&secondColumnOk) - 1;//Second column
     int startRow = rowStartInput->text().toInt(&startRowOk) - 1;
     int endRow = rowEndInput->text().toInt(&endRowOk) - 1;
+
+    //check data correction
+    qDebug() << "File path:" << csvFilePath;
+    qDebug() << "Column:" << column << ", Start row:" << startRow << ", End row:" << endRow;
+    qDebug() << "Second column:" << secondColumn << ", Double column enabled:" << doubleColumnRadio->isChecked();
 
     if (!columnOk || !startRowOk || !endRowOk || startRow < 0 || endRow < startRow ||
         (doubleColumnRadio->isChecked() && !secondColumnOk)) {
@@ -186,6 +201,9 @@ void mainapp::displaySelectedData() {
     QTextStream in(&file);//put file into text stream
     QStringList lines;//tu iteration variable
     int currentRow = 0;//temp line number
+    int validCount_left = 0;//number of number-type values - for 1st column choosen
+    int validCount_right = 0;//number of number-type values - for 2st column choosen
+    int length_rows=endRow-startRow+1;
 
     while (!in.atEnd()) {//if not end
         QString line = in.readLine();
@@ -195,6 +213,11 @@ void mainapp::displaySelectedData() {
 
             if (column >= 0 && column < columns.size()) {
                 rowDataLeft = QString::number(currentRow + 1) + ": " + columns[column].trimmed();
+                qDebug()<<"Test: "<<columns[column].toDouble();
+                if(columns[column].toDouble())//transformable to number?
+                {
+                    validCount_left++;
+                }
             } else {
                 rowDataLeft = QString("Error: Index out of range for Column 1");
             }
@@ -202,49 +225,81 @@ void mainapp::displaySelectedData() {
             if (doubleColumnRadio->isChecked()) {
                 if (secondColumn >= 0 && secondColumn < columns.size()) {
                     rowDataRight = columns[secondColumn].trimmed();
+                    qDebug()<<"Test: "<<columns[secondColumn].toDouble();
+                    if(columns[secondColumn].toDouble())//transformable to number?
+                    {
+                        validCount_right++;
+                    }
                 } else {
                     rowDataRight = QString("Error: Index out of range for Column 2");
                 }
             }
-
             //format the output with fixed-width columns
-            QString formattedRow = rowDataLeft.leftJustified(40, ' ') + rowDataRight;
+            QString formattedRow = rowDataLeft.leftJustified(180, ' ') + rowDataRight;
             lines.append(formattedRow);
         }
         currentRow++;
     }
+
+
+    //all data is numerical type check on left columnt
+    qDebug()<<"Numerical count left: "<<validCount_left;
+    qDebug()<<"Rows amount: "<<length_rows;
+    if (validCount_left == length_rows) {//check if amount of lines is the same as amount of int type
+        QMessageBox::information(this, "Success", "All entries are valid numbers on left column");
+        all_numbers_left=true;
+    } else {
+        QMessageBox::critical(this, "Error", "Some entries are invalid on left column");
+        all_numbers_left=false;
+    }
+
+
+    if (doubleColumnRadio->isChecked()) {//if option with 2nd column selected
+
+    //check if right column data if numerical type
+    qDebug()<<"Numerical count right: "<<validCount_right;
+    qDebug()<<"Rows amount: "<<length_rows;
+    if (validCount_right == length_rows) {//check if amount of lines is the same as amount of int type
+        QMessageBox::information(this, "Success", "All entries are valid numbers on right column");
+        all_numbers_right=true;
+    } else {
+        QMessageBox::critical(this, "Error", "Some entries are invalid on right column");
+        all_numbers_right=false;
+    }
+    }
+
+
+
 
     file.close();//close .csv
 
     if (lines.isEmpty()) {//if empty
         QMessageBox::warning(this, "Warning", "No valid data found in the specified range.");
     }
-
     dataDisplay->clear();
-    dataDisplay->setText(lines.join("\n"));//display data separately
+    dataDisplay->setText(lines.join("\n"));
 }
 
 void mainapp::stats1_page()
 {
-    stats1* stat1 = new stats1();
+    stats1* stat1 = new stats1(nullptr);
+    stat1->setAttribute(Qt::WA_DeleteOnClose);
     stat1->show();
     this->close();
 }
 
 void mainapp::stats2_page()
 {
-    stats2* stat2 = new stats2();
+    stats2* stat2 = new stats2(nullptr);
+    stat2->setAttribute(Qt::WA_DeleteOnClose);
     stat2->show();
     this->close();
 }
 
 void mainapp::plotter_page()
 {
-    plotter* plott = new plotter();
+    plotter* plott = new plotter(nullptr);
+    plott->setAttribute(Qt::WA_DeleteOnClose);
     plott->show();
     this->close();
 }
-
-
-
-

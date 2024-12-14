@@ -23,12 +23,12 @@
 #include <QRegularExpression>
 #include <QRadioButton>
 
-
 class mainapp : public QWidget {
     Q_OBJECT
 public:
     mainapp(QWidget *parent = nullptr);
-
+    bool all_numbers_left=false;//if data if numerical type
+    bool all_numbers_right=false;//if data if numerical type
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
     void exitApp();//exit app

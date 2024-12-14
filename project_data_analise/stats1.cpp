@@ -1,6 +1,10 @@
 #include "stats1.h"
 
-stats1::stats1(QWidget *parent) : QWidget(parent)
+stats1::stats1(bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
+    : QWidget(parent),
+    all_numbers_left(allLeft),
+    all_numbers_right(allRight),
+    two_column_mode(twoColumn)
 {
     setWindowTitle("Math stats I window");
 
@@ -14,6 +18,9 @@ stats1::stats1(QWidget *parent) : QWidget(parent)
 
     QFont font;
     font.setPointSize(21);//Font size -all font size
+
+    QFont font_stats;
+    font_stats.setPointSize(16);//Font size -all font size
 
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);
@@ -37,9 +44,10 @@ stats1::stats1(QWidget *parent) : QWidget(parent)
     //display data field(screen)
     dataDisplay = new QTextEdit(this);
     dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
-    dataDisplay->setFont(font);
+    dataDisplay->setFont(font_stats);
     dataDisplay->setReadOnly(true);//only to read
-    dataDisplay->setStyleSheet("background-color: white; border: 1px solid black;");//background colour and font colour
+    dataDisplay->setStyleSheet("background-color: white;color: black; border: 1px solid black;");//background colour and font colour
+    displayDataAnalysis();
 
     int x_size = 350;
     int y_size = 53;
@@ -122,9 +130,59 @@ void stats1::mainPage()
     this->close();
 }
 
+void stats1::displayDataAnalysis()//analisys about mode selection
+{
+    QString message;
+
+    if (two_column_mode) {
+        message = "Two column mode selected.\n";
+        message += "Left column numerical type: " + QString(all_numbers_left ? "Yes" : "No") + "\n";
+        message += "Right column numerical type: " + QString(all_numbers_right ? "Yes" : "No");
+    } else {
+        message = "Single column mode selected.\n";
+        message += "Column numerical type: " + QString(all_numbers_left ? "Yes" : "No");
+    }
+
+    dataDisplay->setText(message);
+}
+
 void stats1::count_mean()
 {
-
+    QString message1;
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Mean for 1st column: \n";
+            message1 += "Mean for 2nd column: \n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Mean for 1st column: \n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "Mean for 2nd column: \n";
+            message1 += "1st column is not numerical. \n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Mean for 1st column: \n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_median()
@@ -164,6 +222,6 @@ void stats1::count_amount_of_numbers()
 
 void stats1::clear_chat()
 {
-
+    dataDisplay->clear();
 }
 

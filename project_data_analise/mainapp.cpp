@@ -235,13 +235,13 @@ void mainapp::displaySelectedData() {
                 }
             }
             //format the output with fixed-width columns
-            QString formattedRow = rowDataLeft.leftJustified(180, ' ') + rowDataRight;
+            QString formattedRow = rowDataLeft.leftJustified(80, ' ') + rowDataRight;//max lenght is 80 char, is less fill with space
             lines.append(formattedRow);
         }
         currentRow++;
     }
 
-
+//----------------------------------------check if column is all numerical type
     //all data is numerical type check on left columnt
     qDebug()<<"Numerical count left: "<<validCount_left;
     qDebug()<<"Rows amount: "<<length_rows;
@@ -255,7 +255,7 @@ void mainapp::displaySelectedData() {
 
 
     if (doubleColumnRadio->isChecked()) {//if option with 2nd column selected
-
+    two_column_mode = true;//managing with 2 column analisys
     //check if right column data if numerical type
     qDebug()<<"Numerical count right: "<<validCount_right;
     qDebug()<<"Rows amount: "<<length_rows;
@@ -267,9 +267,7 @@ void mainapp::displaySelectedData() {
         all_numbers_right=false;
     }
     }
-
-
-
+//---------------------------------------------------------------------
 
     file.close();//close .csv
 
@@ -282,7 +280,7 @@ void mainapp::displaySelectedData() {
 
 void mainapp::stats1_page()
 {
-    stats1* stat1 = new stats1(nullptr);
+    stats1* stat1 = new stats1(all_numbers_left,all_numbers_right,two_column_mode,nullptr);
     stat1->setAttribute(Qt::WA_DeleteOnClose);
     stat1->show();
     this->close();

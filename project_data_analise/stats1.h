@@ -18,7 +18,10 @@
 class stats1 : public QWidget {
     Q_OBJECT
 public:
-    stats1(QWidget *parent = nullptr);
+    stats1(bool allLeft, bool allRight, bool twoColumn,QWidget *parent=nullptr);//share variables from mainapp
+    bool all_numbers_left;//if all numeric on left column
+    bool all_numbers_right;//if all numeric on the right column
+    bool two_column_mode;//mode 1 or 2 column
 
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
@@ -26,6 +29,7 @@ private slots:
     void mainPage();//go to main page
 
     //methods to count stats
+    void displayDataAnalysis();//information about data
     void count_mean();//mean value
     void count_median();//median value
     void count_variance();//variance value

@@ -95,6 +95,9 @@ plotter::plotter(QWidget *parent) : QWidget(parent)
     clear_screen->setStyleSheet("color: yellow;");
     clear_screen->setGeometry(10, start_y + 6*gap+90, x_length+40, width_button+20);
     connect(clear_screen, &QPushButton::clicked, this, &plotter::clearPlot);
+
+    vector<double> left_column_vector;
+    vector<double> right_column_vector;
 }
 
 

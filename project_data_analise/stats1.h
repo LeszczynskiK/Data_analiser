@@ -21,11 +21,7 @@ class mainapp;
 class stats1 : public QWidget {
     Q_OBJECT
 public:
-    stats1(bool allLeft, bool allRight, bool twoColumn,QWidget *parent=nullptr);//share variables from mainapp
-    bool all_numbers_left;//if all numeric on left column
-    bool all_numbers_right;//if all numeric on the right column
-    bool two_column_mode;//mode 1 or 2 column
-    QString message1;//initialise space for messages
+    stats1(const vector<double> left,const vector<double> right,bool allLeft, bool allRight, bool twoColumn,QWidget *parent=nullptr);//share variables from mainapp
 
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
@@ -52,6 +48,12 @@ private:
     QLabel *frame;//frame for display screen
     QTextEdit *dataDisplay;//place to display data from .csv
     QStringList data;//data from columns
+    vector<double> left_column;
+    vector<double> right_column;
+    bool all_numbers_left;//if all numeric on left column
+    bool all_numbers_right;//if all numeric on the right column
+    bool two_column_mode;//mode 1 or 2 column
+    QString message1;//initialise space for messages
 
     //buttons to do statistics methods
     QPushButton *mean_button;

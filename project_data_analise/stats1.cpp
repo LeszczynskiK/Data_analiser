@@ -1,7 +1,9 @@
 #include "stats1.h"
 
-stats1::stats1(bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
+stats1::stats1(const vector<double> left,const vector<double> right,bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
     : QWidget(parent),
+    left_column(left),
+    right_column(right),
     all_numbers_left(allLeft),
     all_numbers_right(allRight),
     two_column_mode(twoColumn)
@@ -131,14 +133,26 @@ void stats1::mainPage()
 void stats1::displayDataAnalysis()//analisys about mode selection
 {
     QString message;
-
-    if (two_column_mode) {
-        message = "Two column mode selected.\n";
+     qDebug() << "two_column_mode in displayDataAnalysis: " << two_column_mode;
+    if (two_column_mode==true) {
+        message += "Two column mode selected.\n";
         message += "Left column numerical type: " + QString(all_numbers_left ? "Yes" : "No") + "\n";
-        message += "Right column numerical type: " + QString(all_numbers_right ? "Yes" : "No");
+        message += "Right column numerical type: " + QString(all_numbers_right ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
+        if(right_column.empty())
+        {
+            message += "Vector of 2nd column data is empty! \n";
+        }
     } else {
-        message = "Single column mode selected.\n";
-        message += "Column numerical type: " + QString(all_numbers_left ? "Yes" : "No");
+        message += "Single column mode selected.\n";
+        message += "Column numerical type: " + QString(all_numbers_left ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
     }
 
     dataDisplay->setText(message);

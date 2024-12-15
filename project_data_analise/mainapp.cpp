@@ -166,6 +166,7 @@ void mainapp::toggleDoubleColumn(bool checked)
 {
     secondColumnInput->setVisible(checked);//if option 2 columns, then visible
     secondColumnLabel->setVisible(checked);
+    two_column_mode = checked;//switch state if bool(information if mode single or double selected)
 }
 
 void mainapp::displaySelectedData() {    
@@ -216,6 +217,7 @@ void mainapp::displaySelectedData() {
                 qDebug()<<"Test: "<<columns[column].toDouble();
                 if(columns[column].toDouble())//transformable to number?
                 {
+                    left_column_vec.push_back(columns[column].toDouble());//save data column from row in vector
                     validCount_left++;
                 }
             } else {
@@ -228,6 +230,7 @@ void mainapp::displaySelectedData() {
                     qDebug()<<"Test: "<<columns[secondColumn].toDouble();
                     if(columns[secondColumn].toDouble())//transformable to number?
                     {
+                        right_column_vec.push_back(columns[secondColumn].toDouble());//save data column from row in vector
                         validCount_right++;
                     }
                 } else {
@@ -255,7 +258,6 @@ void mainapp::displaySelectedData() {
 
 
     if (doubleColumnRadio->isChecked()) {//if option with 2nd column selected
-    two_column_mode = true;//managing with 2 column analisys
     //check if right column data if numerical type
     qDebug()<<"Numerical count right: "<<validCount_right;
     qDebug()<<"Rows amount: "<<length_rows;
@@ -280,7 +282,8 @@ void mainapp::displaySelectedData() {
 
 void mainapp::stats1_page()
 {
-    stats1* stat1 = new stats1(all_numbers_left,all_numbers_right,two_column_mode,nullptr);
+    stats1* stat1 = new stats1(left_column_vec,right_column_vec,all_numbers_left,all_numbers_right,two_column_mode,nullptr);
+    qDebug() << "two_column_mode: " << two_column_mode;
     stat1->setAttribute(Qt::WA_DeleteOnClose);
     stat1->show();
     this->close();

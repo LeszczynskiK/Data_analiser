@@ -2,7 +2,6 @@
 #define STATS1_H
 
 #include "mainapp.h"
-
 #include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
@@ -18,7 +17,6 @@
 #include <algorithm>
 using namespace std;
 
-class mainapp;
 class stats1 : public QWidget {
     Q_OBJECT
 public:
@@ -43,13 +41,11 @@ private slots:
     void clear_chat();
 
 private:
-    mainapp *mainApp;//pointer to mainapp object
     QPixmap background;//Background txt
     QPushButton *exit_button;//exit app
     QPushButton *main_button;//go to main page
     QLabel *frame;//frame for display screen
     QTextEdit *dataDisplay;//place to display data from .csv
-    QStringList data;//data from columns
     vector<double> left_column;
     vector<double> right_column;
     bool all_numbers_left;//if all numeric on left column

@@ -1,6 +1,12 @@
 #include "stats2.h"
 
-stats2::stats2(QWidget *parent) : QWidget(parent)
+stats2::stats2(const vector<double> left,const vector<double> right,bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
+    : QWidget(parent),
+    left_column(left),
+    right_column(right),
+    all_numbers_left(allLeft),
+    all_numbers_right(allRight),
+    two_column_mode(twoColumn)
 {
     setWindowTitle("Math stats II window");
 
@@ -14,6 +20,9 @@ stats2::stats2(QWidget *parent) : QWidget(parent)
 
     QFont font;
     font.setPointSize(21);//Font size -all font size
+
+    QFont font_stats;
+    font_stats.setPointSize(16);//Font size -all font size
 
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);
@@ -34,18 +43,94 @@ stats2::stats2(QWidget *parent) : QWidget(parent)
     main_button->setGeometry(10, 770, 225, 70);
     connect(main_button, &QPushButton::clicked, this, &stats2::mainPage);
 
+    int x_size = 350;
+    int y_size = 53;
+    int x_begin = 30;
+    int y_begin = 300;
+    int gap=10;
+
+    kurtosis_button = new QPushButton("Kurtosis", this);
+    kurtosis_button->setFont(font);
+    kurtosis_button->setStyleSheet("color: yellow;");
+    kurtosis_button->setGeometry(x_begin, y_begin, x_size, y_size);
+    connect(kurtosis_button, &QPushButton::clicked, this, &stats2::count_kurtosis);
+
+    CV_button = new QPushButton("Coefficient of variation", this);
+    CV_button->setFont(font);
+    CV_button->setStyleSheet("color: yellow;");
+    CV_button->setGeometry(x_begin, y_begin+gap+y_size, x_size, y_size);
+    connect(CV_button, &QPushButton::clicked, this, &stats2::count_CV);
+
+    skewness_button = new QPushButton("Skewness", this);
+    skewness_button->setFont(font);
+    skewness_button->setStyleSheet("color: yellow;");
+    skewness_button->setGeometry(x_begin, y_begin+2*gap+2*y_size, x_size, y_size);
+    connect(skewness_button, &QPushButton::clicked, this, &stats2::count_skewness);
+
+    element_sum_button = new QPushButton("Sum of elements", this);
+    element_sum_button->setFont(font);
+    element_sum_button->setStyleSheet("color: yellow;");
+    element_sum_button->setGeometry(x_begin, y_begin+3*gap+3*y_size, x_size, y_size);
+    connect(element_sum_button, &QPushButton::clicked, this, &stats2::count_element_sum);
+
+    min_max_diff_button = new QPushButton("Abs(min_value,max_value)", this);
+    min_max_diff_button->setFont(font);
+    min_max_diff_button->setStyleSheet("color: yellow;");
+    min_max_diff_button->setGeometry(x_begin, y_begin+4*gap+4*y_size, x_size, y_size);
+    connect(min_max_diff_button, &QPushButton::clicked, this, &stats2::count_min_max_diff);
+
+    MAD_button = new QPushButton("Mean absolute deviation", this);
+    MAD_button->setFont(font);
+    MAD_button->setStyleSheet("color: yellow;");
+    MAD_button->setGeometry(x_begin, y_begin+5*gap+5*y_size, x_size, y_size);
+    connect(MAD_button, &QPushButton::clicked, this, &stats2::count_MAD);
+
+    clear_chat_button = new QPushButton("Clear...", this);
+    clear_chat_button->setFont(font);
+    clear_chat_button->setStyleSheet("color: yellow;");
+    clear_chat_button->setGeometry(450, 770, 120, 70);
+    connect(clear_chat_button, &QPushButton::clicked, this, &stats2::clear_chat);
+
     //display data field(screen)
     dataDisplay = new QTextEdit(this);
     dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
-    dataDisplay->setFont(font);
+    dataDisplay->setFont(font_stats);
     dataDisplay->setReadOnly(true);//only to read
-    dataDisplay->setStyleSheet("background-color: white;border: 1px solid black;");//background colour and font colour
+    dataDisplay->setStyleSheet("background-color: white;color:black;border: 1px solid black;");//background colour and font colour
+    displayDataAnalysis();
 }
 
 void stats2::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     painter.drawPixmap(0, 0, background);//Background
     QWidget::paintEvent(event);
+}
+
+void stats2::displayDataAnalysis()//analisys about mode selection
+{
+    QString message;
+    qDebug() << "two_column_mode in displayDataAnalysis: " << two_column_mode;
+    if (two_column_mode==true) {
+        message += "Two column mode selected.\n";
+        message += "Left column numerical type: " + QString(all_numbers_left ? "Yes" : "No") + "\n";
+        message += "Right column numerical type: " + QString(all_numbers_right ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
+        if(right_column.empty())
+        {
+            message += "Vector of 2nd column data is empty! \n";
+        }
+    } else {
+        message += "Single column mode selected.\n";
+        message += "Column numerical type: " + QString(all_numbers_left ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
+    }
+    dataDisplay->setText(message);
 }
 
 void stats2::exitApp()
@@ -58,5 +143,40 @@ void stats2::mainPage()
     mainapp *appWindow = new mainapp();
     appWindow->show();
     this->close();
+}
+
+void stats2::count_kurtosis()//count kurtosis
+{
+
+}
+
+void stats2::count_CV()//count coefficient of variation
+{
+
+}
+
+void stats2::count_skewness()//count skewness
+{
+
+}
+
+void stats2::count_element_sum()//count element sum
+{
+
+}
+
+void stats2::count_min_max_diff()//count difference between  min max value
+{
+
+}
+
+void stats2::count_MAD()//count MAD
+{
+
+}
+
+void stats2::clear_chat()//clear chat
+{
+    dataDisplay->clear();
 }
 

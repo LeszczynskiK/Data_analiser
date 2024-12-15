@@ -291,7 +291,7 @@ void mainapp::stats1_page()
 
 void mainapp::stats2_page()
 {
-    stats2* stat2 = new stats2(nullptr);
+    stats2* stat2 = new stats2(left_column_vec,right_column_vec,all_numbers_left,all_numbers_right,two_column_mode,nullptr);
     stat2->setAttribute(Qt::WA_DeleteOnClose);
     stat2->show();
     this->close();

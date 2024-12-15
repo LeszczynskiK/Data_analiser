@@ -101,7 +101,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
 
     //display data field(screen)
     dataDisplay = new QTextEdit(this);
-    dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
+    dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);
     dataDisplay->setFont(font_screen);
     dataDisplay->setReadOnly(true);//only to read
 
@@ -299,7 +299,7 @@ void mainapp::stats2_page()
 
 void mainapp::plotter_page()
 {
-    plotter* plott = new plotter(nullptr);
+    plotter* plott = new plotter(left_column_vec,right_column_vec,all_numbers_left,all_numbers_right,two_column_mode,nullptr);
     plott->setAttribute(Qt::WA_DeleteOnClose);
     plott->show();
     this->close();

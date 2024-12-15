@@ -162,12 +162,97 @@ void stats2::count_skewness()//count skewness
 
 void stats2::count_element_sum()//count element sum
 {
+    double sum_left=0;
+    double sum_right=0;
 
+    for(auto o1 : left_column)
+    {
+        sum_left+=o1;
+    }
+
+    for(auto o2 : right_column)
+    {
+        sum_right+=o2;
+    }
+
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Sum for 1st column: \n"+to_string(sum_left) + "\n";
+            message1 += "Sum for 2nd column: \n"+to_string(sum_right) + "\n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Sum for 1st column: \n"+to_string(sum_left) + "\n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Sum for 2nd column: \n"+to_string(sum_right) + "\n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Sum for 1st column: \n"+to_string(sum_left) + "\n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats2::count_min_max_diff()//count difference between  min max value
 {
-
+    double range_min_left=*min_element(left_column.begin(),left_column.end());
+    double range_min_right=*min_element(right_column.begin(),right_column.end());
+    double range_max_left=*max_element(left_column.begin(),left_column.end());
+    double range_max_right=*max_element(right_column.begin(),right_column.end());
+    double left_diff=abs(range_max_left-range_min_left);
+    double right_diff=abs(range_max_right-range_min_right);
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
+            message1 += "abs(max_element,min_element) for 2nd column: \n"+to_string(right_diff)+"\n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "abs(max_element,min_element) for 2nd column: \n"+to_string(right_diff)+"\n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats2::count_MAD()//count MAD

@@ -21,11 +21,12 @@
 class plotter : public QWidget {
     Q_OBJECT
 public:
-    plotter(QWidget *parent = nullptr);
+    plotter(const vector<double> left,const vector<double> right,bool allLeft, bool allRight, bool twoColumn,QWidget *parent=nullptr);
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
     void exitApp();//exit app
     void mainPage();//go to main page
+    void displayDataAnalysis();//information about data
 
     //plotters types connected with buttons
     void Plot1();
@@ -53,6 +54,13 @@ private:
      QPushButton *clear_screen;//clear screan(delete plot)
      QChartView *chartView;//to see
      QChart *chart;//to draw
+     vector<double> left_column;
+     vector<double> right_column;
+     bool all_numbers_left;//if all numeric on left column
+     bool all_numbers_right;//if all numeric on the right column
+     bool two_column_mode;//mode 1 or 2 column
+     QString message1;//initialise space for messages
+     QLabel *dataAnalysisLabel;
 };
 
 #endif // PLOTTER_H

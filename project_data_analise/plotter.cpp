@@ -1,6 +1,12 @@
 #include "plotter.h"
 
-plotter::plotter(QWidget *parent) : QWidget(parent)
+plotter::plotter(const vector<double> left,const vector<double> right,bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
+    : QWidget(parent),
+    left_column(left),
+    right_column(right),
+    all_numbers_left(allLeft),
+    all_numbers_right(allRight),
+    two_column_mode(twoColumn)
 {
     setWindowTitle("Plotter window");
 
@@ -15,6 +21,9 @@ plotter::plotter(QWidget *parent) : QWidget(parent)
     QFont font;
     font.setPointSize(21);//Font size -all font size
 
+    QFont font_stats;
+    font_stats.setPointSize(15);//font for screen info about data
+
 
     int frame_x_size=x/2+130;//frame x_size
     int frame_y_size=y/2 + 370;//frame y_size
@@ -22,10 +31,20 @@ plotter::plotter(QWidget *parent) : QWidget(parent)
     chart = new QChart();
     chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setGeometry(600, 30, frame_x_size, frame_y_size);//size of view
+    chartView->setGeometry(600+10, 30+10, frame_x_size-20, frame_y_size-20);//size of view
     chartView->setStyleSheet("background-color: white; color:black;border: 1px solid black;");
+    chartView->raise();
     chart->setBackgroundVisible(true);
-    chart->setBackgroundBrush(QBrush(QColor("grey")));
+    chart->setBackgroundBrush(QBrush(QColor("grey")));//QBrush will paint on view of data information
+    //this is priority bigger than QLabel
+
+    //this layer under chartView so it will not block plot view
+    dataAnalysisLabel = new QLabel(this);//for information about data status
+    dataAnalysisLabel->setFont(font_stats);
+    dataAnalysisLabel->setStyleSheet("background-color: white; color: black; border: 1px solid black;");
+    dataAnalysisLabel->setGeometry(600+10, 30+10, frame_x_size-20, frame_y_size-20); // Position and size
+    dataAnalysisLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    displayDataAnalysis();
 
 
     exit_button = new QPushButton("Exit app...", this);//leave from app
@@ -119,13 +138,69 @@ void plotter::mainPage()
     this->close();
 }
 
+void plotter::displayDataAnalysis()//analisys about mode selection
+{
+    QString message;
+    qDebug() << "two_column_mode in displayDataAnalysis: " << two_column_mode;
+    if (two_column_mode==true) {
+        message += "Two column mode selected.\n";
+        message += "Left column numerical type: " + QString(all_numbers_left ? "Yes" : "No") + "\n";
+        message += "Right column numerical type: " + QString(all_numbers_right ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
+        if(right_column.empty())
+        {
+            message += "Vector of 2nd column data is empty! \n";
+        }
+    } else {
+        message += "Single column mode selected.\n";
+        message += "Column numerical type: " + QString(all_numbers_left ? "Yes" : "No")+"\n";
+        if(left_column.empty())
+        {
+            message += "Vector of 1st column data is empty! \n";
+        }
+    }
+    dataAnalysisLabel->setText(message);
+}
 
 //x is 1st choosen column, y is 2nd choosen column
 //if only 1 column mode - impossible to draw(schow information on board)
-void plotter::Plot1()//draw x y diagram
+void plotter::Plot1()// Draw x y diagram
 {
+    //If 2 column mode is choosen
+    if (!two_column_mode || left_column.empty() || right_column.empty()) {
+        dataAnalysisLabel->setText("Error: Cannot plot - two column mode is required and columns cannot be empty.");
+        return;
+    }
 
+    //remove old series (plot)
+    chart->removeAllSeries();
+
+    //create new data plot
+    QLineSeries *series = new QLineSeries();
+
+    //add points based on vectors value
+    for (auto i = 0; i < left_column.size(); i++) {//columns are the same size
+        series->append(left_column[i], right_column[i]);
+    }
+
+    //add data series do chart
+    chart->addSeries(series);
+
+    //actualise axes
+    chart->createDefaultAxes();
+    chart->axes(Qt::Horizontal).first()->setTitleText("Column 1 (X)");
+    chart->axes(Qt::Vertical).first()->setTitleText("Column 2 (Y)");
+
+    //title of chart
+    chart->setTitle("Plot: f(x, y)");
+
+    //give information if finished
+    dataAnalysisLabel->setText("Plot generated: f(x, y)");
 }
+
 
 void plotter::Plot2()//draw y x diagram
 {
@@ -155,5 +230,6 @@ void plotter::Plot6()//draw y time diagram
 void plotter::clearPlot()
 {
     chart->removeAllSeries();
+    dataAnalysisLabel->clear();
     chart->createDefaultAxes();
 }

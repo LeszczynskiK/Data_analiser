@@ -108,8 +108,6 @@ stats1::stats1(bool allLeft, bool allRight, bool twoColumn,QWidget *parent)
     clear_chat_button->setStyleSheet("color: yellow;");
     clear_chat_button->setGeometry(450, 770, 120, 70);
     connect(clear_chat_button, &QPushButton::clicked, this, &stats1::clear_chat);
-
-
 }
 
 void stats1::paintEvent(QPaintEvent *event) {
@@ -148,7 +146,6 @@ void stats1::displayDataAnalysis()//analisys about mode selection
 
 void stats1::count_mean()
 {
-    QString message1;
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -163,8 +160,8 @@ void stats1::count_mean()
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
-            message1 += "Mean for 2nd column: \n";
             message1 += "1st column is not numerical. \n";
+            message1 += "Mean for 2nd column: \n";
         }
         else
         {
@@ -187,7 +184,40 @@ void stats1::count_mean()
 
 void stats1::count_median()
 {
-
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Mean for 1st column: \n";
+            message1 += "Mean for 2nd column: \n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Mean for 1st column: \n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Mean for 2nd column: \n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Mean for 1st column: \n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_variance()

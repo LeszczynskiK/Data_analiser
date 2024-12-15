@@ -3,6 +3,8 @@
 
 #include "mainapp.h"
 
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
 #include <QWidget>
 #include <QLineEdit>
 #include <QPushButton>
@@ -14,6 +16,7 @@
 #include <QFileDialog>
 #include <QTextEdit>
 #include <QFile>
+
 
 class plotter : public QWidget {
     Q_OBJECT
@@ -47,9 +50,9 @@ private:
      QPushButton *plot4;//time y
      QPushButton *plot5;//x time
      QPushButton *plot6;//y time
-
      QPushButton *clear_screen;//clear screan(delete plot)
-
+     QChartView *chartView;//to see
+     QChart *chart;//to draw
 };
 
 #endif // PLOTTER_H

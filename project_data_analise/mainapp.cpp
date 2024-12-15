@@ -235,7 +235,7 @@ void mainapp::displaySelectedData() {
                 }
             }
             //format the output with fixed-width columns
-            QString formattedRow = rowDataLeft.leftJustified(80, ' ') + rowDataRight;//max lenght is 80 char, is less fill with space
+            QString formattedRow = rowDataLeft.leftJustified(100, ' ') + rowDataRight;//max lenght is 80 char, is less fill with space
             lines.append(formattedRow);
         }
         currentRow++;

@@ -14,7 +14,10 @@
 #include <QFileDialog>
 #include <QTextEdit>
 #include <QFile>
+#include <vector>
+using namespace std;
 
+class mainapp;
 class stats1 : public QWidget {
     Q_OBJECT
 public:
@@ -22,6 +25,7 @@ public:
     bool all_numbers_left;//if all numeric on left column
     bool all_numbers_right;//if all numeric on the right column
     bool two_column_mode;//mode 1 or 2 column
+    QString message1;//initialise space for messages
 
 private slots:
     void paintEvent(QPaintEvent *event);//background setter
@@ -41,11 +45,13 @@ private slots:
     void clear_chat();
 
 private:
+    mainapp *mainApp;//pointer to mainapp object
     QPixmap background;//Background txt
     QPushButton *exit_button;//exit app
     QPushButton *main_button;//go to main page
     QLabel *frame;//frame for display screen
     QTextEdit *dataDisplay;//place to display data from .csv
+    QStringList data;//data from columns
 
     //buttons to do statistics methods
     QPushButton *mean_button;

@@ -22,6 +22,8 @@
 #include <QMessageBox>
 #include <QRegularExpression>
 #include <QRadioButton>
+#include <vector>
+using namespace std;
 
 class mainapp : public QWidget {
     Q_OBJECT

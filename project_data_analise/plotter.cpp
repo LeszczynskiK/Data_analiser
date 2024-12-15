@@ -15,6 +15,19 @@ plotter::plotter(QWidget *parent) : QWidget(parent)
     QFont font;
     font.setPointSize(21);//Font size -all font size
 
+
+    int frame_x_size=x/2+130;//frame x_size
+    int frame_y_size=y/2 + 370;//frame y_size
+    //Drawing area
+    chart = new QChart();
+    chartView = new QChartView(chart, this);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setGeometry(600, 30, frame_x_size, frame_y_size);//size of view
+    chartView->setStyleSheet("background-color: white; color:black;border: 1px solid black;");
+    chart->setBackgroundVisible(true);
+    chart->setBackgroundBrush(QBrush(QColor("grey")));
+
+
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);
     exit_button->setStyleSheet("color: yellow;");
@@ -33,11 +46,6 @@ plotter::plotter(QWidget *parent) : QWidget(parent)
     main_button->setStyleSheet("color: yellow;");
     main_button->setGeometry(10, 770, 225, 70);
     connect(main_button, &QPushButton::clicked, this, &plotter::mainPage);
-
-    //Create a white drawing area
-    drawing_area = new QWidget(this);
-    drawing_area->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);
-    drawing_area->setStyleSheet("background-color: white; border: 1px solid black;");
 
     int start_y=230;
     int x_length=275;
@@ -143,5 +151,6 @@ void plotter::Plot6()//draw y time diagram
 
 void plotter::clearPlot()
 {
-
+    chart->removeAllSeries();
+    chart->createDefaultAxes();
 }

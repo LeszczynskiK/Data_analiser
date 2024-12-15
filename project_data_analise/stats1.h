@@ -15,6 +15,7 @@
 #include <QTextEdit>
 #include <QFile>
 #include <vector>
+#include <algorithm>
 using namespace std;
 
 class mainapp;
@@ -31,7 +32,8 @@ private slots:
     //methods to count stats
     void displayDataAnalysis();//information about data
     void count_mean();//mean value
-    void count_median();//median value
+    void count_median();//median value display
+    double calculateMedian(std::vector<double> &data);//median value calculate
     void count_variance();//variance value
     void count_standard_deviation();//standard deviation value
     void count_range();//range(max-min) value

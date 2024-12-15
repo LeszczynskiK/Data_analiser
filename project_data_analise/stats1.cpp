@@ -81,7 +81,7 @@ stats1::stats1(const vector<double> left,const vector<double> right,bool allLeft
     standard_deviation_button->setGeometry(x_begin, y_begin+3*gap+3*y_size, x_size, y_size);
     connect(standard_deviation_button, &QPushButton::clicked, this, &stats1::count_standard_deviation);
 
-    range_button = new QPushButton("Max - Min value", this);
+    range_button = new QPushButton("Range (min,max) value", this);
     range_button->setFont(font);
     range_button->setStyleSheet("color: yellow;");
     range_button->setGeometry(x_begin, y_begin+4*gap+4*y_size, x_size, y_size);
@@ -154,39 +154,57 @@ void stats1::displayDataAnalysis()//analisys about mode selection
             message += "Vector of 1st column data is empty! \n";
         }
     }
-
     dataDisplay->setText(message);
 }
 
 void stats1::count_mean()
 {
+    int size_left = left_column.size();
+    int size_right = right_column.size();
+
+    double sum_left=0;
+    double sum_right=0;
+
+    for(auto o1 : left_column)
+    {
+        sum_left+=o1;
+    }
+
+    for(auto o2 : right_column)
+    {
+        sum_right+=o2;
+    }
+
+    double avg_left = sum_left/size_left;
+    double avg_right = sum_right/size_right;
+
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
-            message1 += "Mean for 1st column: \n";
-            message1 += "Mean for 2nd column: \n";
+            message1 += "Mean for 1st column: \n"+to_string(avg_left) + "\n";
+            message1 += "Mean for 2nd column: \n"+to_string(avg_right) + "\n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
-            message1 += "Mean for 1st column: \n";
+            message1 += "Mean for 1st column: \n"+to_string(avg_left) + "\n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
             message1 += "1st column is not numerical. \n";
-            message1 += "Mean for 2nd column: \n";
+            message1 += "Mean for 2nd column: \n"+to_string(avg_right) + "\n";
         }
         else
         {
-            message1 += "1st and 2nd column is numerical value. \n";
+            message1 += "1st and 2nd column is NOT numerical value. \n";
         }
     }
     else
     {
         if(all_numbers_left == true)
         {
-            message1 += "Mean for 1st column: \n";
+            message1 += "Mean for 1st column: \n"+to_string(avg_left) + "\n";
         }
         else
         {
@@ -196,35 +214,56 @@ void stats1::count_mean()
     dataDisplay->setText(message1);
 }
 
+double stats1::calculateMedian(vector<double> &data)
+{
+    if (data.empty())
+        return 0.0;
+
+    sort(data.begin(), data.end());//median is based on sorted increasily number set
+
+    int n = data.size();
+    if (n % 2 == 0)//if even number of elements
+    {
+        //return average of the two middle numbers
+        return (data[n / 2 - 1] + data[n / 2]) / 2.0;
+    }
+    else//odd number of elements
+    {
+        return data[n / 2];//return the middle element
+    }
+}
+
 void stats1::count_median()
 {
+    double median_left = calculateMedian(left_column);
+    double median_right = calculateMedian(right_column);
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
-            message1 += "Mean for 1st column: \n";
-            message1 += "Mean for 2nd column: \n";
+            message1 += "Median for 1st column: \n"+to_string(median_left)+" \n";
+            message1 += "Median for 2nd column: \n"+to_string(median_right)+" \n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
-            message1 += "Mean for 1st column: \n";
+            message1 += "Median for 1st column: \n"+to_string(median_left)+" \n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
             message1 += "1st column is not numerical. \n";
-            message1 += "Mean for 2nd column: \n";
+            message1 += "Median for 2nd column: \n"+to_string(median_right)+" \n";
         }
         else
         {
-            message1 += "1st and 2nd column is numerical value. \n";
+            message1 += "1st and 2nd column is NOT numerical value. \n";
         }
     }
     else
     {
         if(all_numbers_left == true)
         {
-            message1 += "Mean for 1st column: \n";
+            message1 += "Mean for 1st column: \n"+to_string(median_left)+" \n";
         }
         else
         {
@@ -236,32 +275,318 @@ void stats1::count_median()
 
 void stats1::count_variance()
 {
+    int size_left = left_column.size();
+    int size_right = right_column.size();
 
+    double sum_left=0;
+    double sum_right=0;
+
+    for(auto o1 : left_column)
+    {
+        sum_left+=o1;
+    }
+
+    for(auto o2 : right_column)
+    {
+        sum_right+=o2;
+    }
+
+    double avg_left = sum_left/size_left;
+    double avg_right = sum_right/size_right;
+
+
+    //Calculate variance
+    double variance_left = 0;
+    double variance_right = 0;
+
+    for (auto o1 : left_column)//variance for 1st column
+    {
+        variance_left += pow(o1 - avg_left, 2);
+    }
+
+    for (auto o2 : right_column)//variance for 2nd column
+    {
+        variance_right += pow(o2 - avg_right, 2);
+    }
+
+    variance_left = variance_left/size_left;
+    variance_right = variance_right/size_right;
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Variance for 1st column: \n"+to_string(variance_left)+"\n";
+            message1 += "Variance for 2nd column: \n"+to_string(variance_right)+"\n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Variance for 1st column: \n"+to_string(variance_left)+"\n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Variance for 2nd column: \n"+to_string(variance_right)+"\n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Variance for 1st column: \n"+to_string(variance_left)+"\n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_standard_deviation()
 {
 
+    int size_left = left_column.size();
+    int size_right = right_column.size();
+
+    double sum_left=0;
+    double sum_right=0;
+
+    for(auto o1 : left_column)
+    {
+        sum_left+=o1;
+    }
+
+    for(auto o2 : right_column)
+    {
+        sum_right+=o2;
+    }
+
+    double avg_left = sum_left/size_left;
+    double avg_right = sum_right/size_right;
+
+
+    //Calculate variance
+    double variance_left = 0;
+    double variance_right = 0;
+
+    for (auto o1 : left_column)//variance for 1st column
+    {
+        variance_left += pow(o1 - avg_left, 2);
+    }
+
+    for (auto o2 : right_column)//variance for 2nd column
+    {
+        variance_right += pow(o2 - avg_right, 2);
+    }
+
+    variance_left = variance_left/size_left;
+    variance_right = variance_right/size_right;
+
+    //calculate standard deviation as sqrt of variance
+    double std_dev_left = sqrt(variance_left);
+    double std_dev_right = sqrt(variance_right);
+
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Standard deviation for 1st column: \n"+to_string(std_dev_left)+"\n";
+            message1 += "Standard deviation for 2nd column: \n"+to_string(std_dev_right)+"\n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Standard deviation for 1st column: \n"+to_string(std_dev_left)+"\n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Standard deviation for 2nd column: \n"+to_string(std_dev_right)+"\n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Standard deviation for 1st column: \n"+to_string(std_dev_left)+"\n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_range()
 {
-
+    double range_min_left=*min_element(left_column.begin(),left_column.end());
+    double range_min_right=*min_element(right_column.begin(),right_column.end());
+    double range_max_left=*max_element(left_column.begin(),left_column.end());
+    double range_max_right=*max_element(right_column.begin(),right_column.end());
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
+            message1 += "Range for 2nd column: \n"+to_string(range_min_right)+" to: "+to_string(range_max_right)+"\n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Range for 2nd column: \n"+to_string(range_min_right)+" to: "+to_string(range_max_right)+"\n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_min_value()
 {
-
+    double min_left=*min_element(left_column.begin(),left_column.end());
+    double min_right=*min_element(right_column.begin(),right_column.end());
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
+            message1 += "Min element for 2nd column: \n"+to_string(min_right)+" \n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Min element for 2nd column: \n"+to_string(min_right)+" \n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_max_value()
 {
-
+    double max_left=*max_element(left_column.begin(),left_column.end());
+    double max_right=*max_element(right_column.begin(),right_column.end());
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
+            message1 += "Max element for 2nd column: \n"+to_string(max_right)+" \n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Max element for 2nd column: \n"+to_string(max_right)+" \n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::count_amount_of_numbers()
 {
-
+    int amount_left = left_column.size();
+    int amount_right = right_column.size();
+    if(two_column_mode == true)
+    {
+        if(all_numbers_left == true && all_numbers_right == true)
+        {
+            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
+            message1 += "Amount for 2nd column: \n"+to_string(amount_right)+" \n";
+        }
+        else if(all_numbers_left == true && all_numbers_right == false)
+        {
+            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
+            message1 += "2nd column is not numerical. \n";
+        }
+        else if(all_numbers_left == false && all_numbers_right == true)
+        {
+            message1 += "1st column is not numerical. \n";
+            message1 += "Amount for 2nd column: \n"+to_string(amount_right)+" \n";
+        }
+        else
+        {
+            message1 += "1st and 2nd column is NOT numerical value. \n";
+        }
+    }
+    else
+    {
+        if(all_numbers_left == true)
+        {
+            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
+        }
+        else
+        {
+            message1 += "1st column is not numerical. \n";
+        }
+    }
+    dataDisplay->setText(message1);
 }
 
 void stats1::clear_chat()

@@ -28,7 +28,7 @@ private slots:
     void exitApp();//exit app
     void mainPage();//go to main page
 
-    //methods to count stats
+    //methods to display stats
     void displayDataAnalysis();//information about data
     void count_kurtosis();//count kurtosis
     void count_CV();//count coefficient of variation
@@ -59,6 +59,53 @@ private:
     QPushButton *min_max_diff_button;//abs(min-max) button
     QPushButton *MAD_button;//mean absolute deviation
     QPushButton *clear_chat_button;//clear chat
+
+    //variables to stats counting
+    int size_left;
+    int size_right;
+    double sum_left;
+    double sum_right;
+    double avg_left;
+    double avg_right;
+    double median_left;
+    double median_right;
+    double variance_left;
+    double variance_right;
+    double std_dev_left;
+    double std_dev_right;
+    double kurtosis_left;
+    double kurtosis_right;
+    double CV_left;
+    double CV_right;
+    double skewness_left;
+    double skewness_right;
+    double range_min_left;
+    double range_max_left;
+    double left_diff;
+    double range_min_right;
+    double range_max_right;
+    double right_diff;
+    double mad_left;
+    double mad_right;
+
+    //methods to count stats
+    //functions to count stats
+    double sum_left_fun();
+    double sum_right_fun();
+    double mean_left_fun();
+    double mean_right_fun();
+    double variance_left_fun();
+    double variance_right_fun();
+    double std_dev_left_fun();
+    double std_dev_right_fun();
+    double kurtosis_left_fun();
+    double kurtosis_right_fun();
+    double CV_left_fun();
+    double CV_right_fun();
+    double skewness_left_fun();
+    double skewness_right_fun();
+    double MAD_left_fun();
+    double MAD_right_fun();
 };
 
 #endif // STATS2_H

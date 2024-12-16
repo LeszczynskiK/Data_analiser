@@ -113,9 +113,6 @@ plotter::plotter(const vector<double> left,const vector<double> right,bool allLe
     clear_screen->setStyleSheet("color: yellow;");
     clear_screen->setGeometry(10, start_y + 6*gap+90, x_length+40, width_button+20);
     connect(clear_screen, &QPushButton::clicked, this, &plotter::clearPlot);
-
-    vector<double> left_column_vector;
-    vector<double> right_column_vector;
 }
 
 
@@ -196,7 +193,7 @@ void plotter::Plot1()// Draw x y diagram
     chart->removeAllSeries();
 
     //create new data plot
-    QLineSeries *series = new QLineSeries();
+    series = new QLineSeries();
     series->setColor(Qt::red);
 
     //add points based on vectors value
@@ -229,7 +226,7 @@ void plotter::Plot2()//draw y x diagram
         chart->removeAllSeries();
 
         //create new data plot
-        QLineSeries *series = new QLineSeries();
+        series = new QLineSeries();
         series->setColor(Qt::red);
 
         //add points based on vectors value
@@ -258,7 +255,7 @@ void plotter::Plot3()//draw time x diagram
     //Remove previous series
     chart->removeAllSeries();
 
-    QLineSeries *series = new QLineSeries();
+    series = new QLineSeries();
     series->setColor(Qt::red);
 
     //sample index is t
@@ -289,7 +286,7 @@ void plotter::Plot4()//draw time y diagram
         //Remove previous series
         chart->removeAllSeries();
 
-        QLineSeries *series = new QLineSeries();
+        series = new QLineSeries();
         series->setColor(Qt::red);
 
         //sample index is t
@@ -320,7 +317,7 @@ void plotter::Plot5()//draw x time diagram
         //Remove previous series
         chart->removeAllSeries();
 
-        QLineSeries *series = new QLineSeries();
+        series = new QLineSeries();
         series->setColor(Qt::red);
 
         //sample index is t
@@ -351,7 +348,7 @@ void plotter::Plot6()//draw y time diagram
         //Remove previous series
         chart->removeAllSeries();
 
-        QLineSeries *series = new QLineSeries();
+        series = new QLineSeries();
         series->setColor(Qt::red);
 
         //sample index is t

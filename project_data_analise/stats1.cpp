@@ -157,26 +157,45 @@ void stats1::displayDataAnalysis()//analisys about mode selection
     dataDisplay->setText(message);
 }
 
-void stats1::count_mean()
+double stats1::sum_left_fun()
 {
-    int size_left = left_column.size();
-    int size_right = right_column.size();
-
-    double sum_left=0;
-    double sum_right=0;
-
+    sum_left=0;
     for(auto o1 : left_column)
     {
         sum_left+=o1;
     }
+    return sum_left;
+}
 
-    for(auto o2 : right_column)
+double stats1::sum_right_fun()
+{
+    sum_right=0;
+    for(auto o1 : right_column)
     {
-        sum_right+=o2;
+        sum_right+=o1;
     }
+    return sum_right;
+}
+double stats1::mean_left_fun()
+{
+    size_left = left_column.size();
+    double temp1 = sum_left_fun();
+    avg_left = temp1/size_left;
+    return avg_left;
+}
 
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
+double stats1::mean_right_fun()
+{
+    size_right = right_column.size();
+    double temp2 = sum_right_fun();
+    avg_right = temp2/size_right;
+    return avg_right;
+}
+
+void stats1::count_mean()
+{
+    avg_left = mean_left_fun();
+    avg_right = mean_right_fun();
 
     if(two_column_mode == true)
     {
@@ -235,8 +254,8 @@ double stats1::calculateMedian(vector<double> &data)
 
 void stats1::count_median()
 {
-    double median_left = calculateMedian(left_column);
-    double median_right = calculateMedian(right_column);
+    median_left = calculateMedian(left_column);
+    median_right = calculateMedian(right_column);
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -273,44 +292,35 @@ void stats1::count_median()
     dataDisplay->setText(message1);
 }
 
-void stats1::count_variance()
+double stats1::variance_left_fun()
 {
-    int size_left = left_column.size();
-    int size_right = right_column.size();
-
-    double sum_left=0;
-    double sum_right=0;
-
-    for(auto o1 : left_column)
-    {
-        sum_left+=o1;
-    }
-
-    for(auto o2 : right_column)
-    {
-        sum_right+=o2;
-    }
-
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
-
-
-    //Calculate variance
-    double variance_left = 0;
-    double variance_right = 0;
-
+    avg_left = mean_left_fun();
+    variance_left = 0;
     for (auto o1 : left_column)//variance for 1st column
     {
         variance_left += pow(o1 - avg_left, 2);
     }
+    variance_left = variance_left/size_left;
+    return variance_left;
+}
 
+double stats1::variance_right_fun()
+{
+    avg_right = mean_right_fun();
+    variance_right = 0;
     for (auto o2 : right_column)//variance for 2nd column
     {
         variance_right += pow(o2 - avg_right, 2);
     }
-
-    variance_left = variance_left/size_left;
     variance_right = variance_right/size_right;
+    return variance_right;
+}
+
+void stats1::count_variance()
+{
+    variance_left = variance_left_fun();
+    variance_right = variance_right_fun();
+
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -347,50 +357,22 @@ void stats1::count_variance()
     dataDisplay->setText(message1);
 }
 
+double stats1::std_dev_left_fun()
+{
+    variance_left=variance_left_fun();
+    std_dev_left = sqrt(variance_left);
+}
+
+double stats1::std_dev_right_fun()
+{
+    variance_right=variance_right_fun();
+    std_dev_right = sqrt(variance_right);
+}
+
 void stats1::count_standard_deviation()
 {
-
-    int size_left = left_column.size();
-    int size_right = right_column.size();
-
-    double sum_left=0;
-    double sum_right=0;
-
-    for(auto o1 : left_column)
-    {
-        sum_left+=o1;
-    }
-
-    for(auto o2 : right_column)
-    {
-        sum_right+=o2;
-    }
-
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
-
-
-    //Calculate variance
-    double variance_left = 0;
-    double variance_right = 0;
-
-    for (auto o1 : left_column)//variance for 1st column
-    {
-        variance_left += pow(o1 - avg_left, 2);
-    }
-
-    for (auto o2 : right_column)//variance for 2nd column
-    {
-        variance_right += pow(o2 - avg_right, 2);
-    }
-
-    variance_left = variance_left/size_left;
-    variance_right = variance_right/size_right;
-
-    //calculate standard deviation as sqrt of variance
-    double std_dev_left = sqrt(variance_left);
-    double std_dev_right = sqrt(variance_right);
-
+    std_dev_left = std_dev_left_fun();
+    std_dev_right = std_dev_right_fun();
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -429,10 +411,15 @@ void stats1::count_standard_deviation()
 
 void stats1::count_range()
 {
-    double range_min_left=*min_element(left_column.begin(),left_column.end());
-    double range_min_right=*min_element(right_column.begin(),right_column.end());
-    double range_max_left=*max_element(left_column.begin(),left_column.end());
-    double range_max_right=*max_element(right_column.begin(),right_column.end());
+    range_min_left=0;//preinitialisation, becouse there is error withoud this
+    range_min_right=0;
+    range_max_left=0;
+    range_max_right=0;
+
+    range_min_left=*min_element(left_column.begin(),left_column.end());
+    range_min_right=*min_element(right_column.begin(),right_column.end());
+    range_max_left=*max_element(left_column.begin(),left_column.end());
+    range_max_right=*max_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -471,8 +458,11 @@ void stats1::count_range()
 
 void stats1::count_min_value()
 {
-    double min_left=*min_element(left_column.begin(),left_column.end());
-    double min_right=*min_element(right_column.begin(),right_column.end());
+    min_left =0;//preinitialisation, becouse there is error without this
+    min_right=0;
+
+    min_left=*min_element(left_column.begin(),left_column.end());
+    min_right=*min_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -511,8 +501,11 @@ void stats1::count_min_value()
 
 void stats1::count_max_value()
 {
-    double max_left=*max_element(left_column.begin(),left_column.end());
-    double max_right=*max_element(right_column.begin(),right_column.end());
+    max_left =0;//preinitialisation, becouse there is error without this
+    max_right=0;
+
+    max_left=*max_element(left_column.begin(),left_column.end());
+    max_right=*max_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
@@ -551,24 +544,24 @@ void stats1::count_max_value()
 
 void stats1::count_amount_of_numbers()
 {
-    int amount_left = left_column.size();
-    int amount_right = right_column.size();
+    size_left = left_column.size();
+    size_right = right_column.size();
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
-            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
-            message1 += "Amount for 2nd column: \n"+to_string(amount_right)+" \n";
+            message1 += "Amount for 1st column: \n"+to_string(size_left)+" \n";
+            message1 += "Amount for 2nd column: \n"+to_string(size_right)+" \n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
-            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
+            message1 += "Amount for 1st column: \n"+to_string(size_left)+" \n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
             message1 += "1st column is not numerical. \n";
-            message1 += "Amount for 2nd column: \n"+to_string(amount_right)+" \n";
+            message1 += "Amount for 2nd column: \n"+to_string(size_right)+" \n";
         }
         else
         {
@@ -579,7 +572,7 @@ void stats1::count_amount_of_numbers()
     {
         if(all_numbers_left == true)
         {
-            message1 += "Amount for 1st column: \n"+to_string(amount_left)+" \n";
+            message1 += "Amount for 1st column: \n"+to_string(size_left)+" \n";
         }
         else
         {

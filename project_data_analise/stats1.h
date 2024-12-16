@@ -27,11 +27,10 @@ private slots:
     void exitApp();//exit app
     void mainPage();//go to main page
 
-    //methods to count stats
+    //methods to display
     void displayDataAnalysis();//information about data
     void count_mean();//mean value
     void count_median();//median value display
-    double calculateMedian(std::vector<double> &data);//median value calculate
     void count_variance();//variance value
     void count_standard_deviation();//standard deviation value
     void count_range();//range(max-min) value
@@ -64,7 +63,38 @@ private:
     QPushButton *amount_button;
     QPushButton *clear_chat_button;
 
+    //variables to stats counting
+    int size_left;
+    int size_right;
+    double sum_left;
+    double sum_right;
+    double avg_left;
+    double avg_right;
+    double median_left;
+    double median_right;
+    double variance_left;
+    double variance_right;
+    double std_dev_left;
+    double std_dev_right;
+    double range_min_left;
+    double range_min_right;
+    double range_max_left;
+    double range_max_right;
+    double min_left;
+    double min_right;
+    double max_left;
+    double max_right;
 
+    //functions to count stats
+    double sum_left_fun();
+    double sum_right_fun();
+    double mean_left_fun();
+    double mean_right_fun();
+    double calculateMedian(std::vector<double> &data);//median value calculate
+    double variance_left_fun();
+    double variance_right_fun();
+    double std_dev_left_fun();
+    double std_dev_right_fun();
 };
 
 #endif // STATS1_H

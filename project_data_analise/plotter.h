@@ -62,6 +62,9 @@ private:
      bool two_column_mode;//mode 1 or 2 column
      QString message1;//initialise space for messages
      QLabel *dataAnalysisLabel;
+     QLineSeries *series;//series of probes
+     vector<double> left_column_vector;//numerical values from 1st column
+     vector<double> right_column_vector;//numerical values from 2nd column
 };
 
 #endif // PLOTTER_H

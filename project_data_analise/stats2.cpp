@@ -145,68 +145,118 @@ void stats2::mainPage()
     this->close();
 }
 
-void stats2::count_kurtosis()//count kurtosis
+
+double stats2::sum_left_fun()
 {
-    int size_left = left_column.size();
-    int size_right = right_column.size();
-
-    double sum_left=0;
-    double sum_right=0;
-
+    sum_left=0;
     for(auto o1 : left_column)
     {
         sum_left+=o1;
     }
+    return sum_left;
+}
 
-    for(auto o2 : right_column)
+double stats2::sum_right_fun()
+{
+    sum_right=0;
+    for(auto o1 : right_column)
     {
-        sum_right+=o2;
+        sum_right+=o1;
     }
+    return sum_right;
+}
+double stats2::mean_left_fun()
+{
+    size_left = left_column.size();
+    double temp1 = sum_left_fun();
+    avg_left = temp1/size_left;
+    return avg_left;
+}
 
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
+double stats2::mean_right_fun()
+{
+    size_right = right_column.size();
+    double temp2 = sum_right_fun();
+    avg_right = temp2/size_right;
+    return avg_right;
+}
 
-
-    //Calculate variance
-    double variance_left = 0;
-    double variance_right = 0;
-
+double stats2::variance_left_fun()
+{
+    avg_left = mean_left_fun();
+    variance_left = 0;
     for (auto o1 : left_column)//variance for 1st column
     {
         variance_left += pow(o1 - avg_left, 2);
     }
+    variance_left = variance_left/size_left;
+    return variance_left;
+}
 
+double stats2::variance_right_fun()
+{
+    avg_right = mean_right_fun();
+    variance_right = 0;
     for (auto o2 : right_column)//variance for 2nd column
     {
         variance_right += pow(o2 - avg_right, 2);
     }
-
-    variance_left = variance_left/size_left;
     variance_right = variance_right/size_right;
+    return variance_right;
+}
 
-    //calculate standard deviation as sqrt of variance
-    double std_dev_left = sqrt(variance_left);
-    double std_dev_right = sqrt(variance_right);
+double stats2::std_dev_left_fun()
+{
+    variance_left=variance_left_fun();
+    std_dev_left = sqrt(variance_left);
+}
 
+double stats2::std_dev_right_fun()
+{
+    variance_right=variance_right_fun();
+    std_dev_right = sqrt(variance_right);
+}
+
+double stats2::kurtosis_left_fun()
+{
     //calculate kurtosis
-    double kurtosis_left = 0;
-    double kurtosis_right = 0;
-
+    kurtosis_left = 0;
     //(4th central moment / standard deviation) ^ 4, where 4th central moment is
     // number[i]-avg_numbers
+    avg_left = mean_left_fun();
+    std_dev_left = std_dev_left_fun();
 
     for (auto o1 : left_column)//for 1st column
     {
         kurtosis_left += pow((o1 - avg_left) / std_dev_left, 4);//normalized 4th moment
     }
+    kurtosis_left = kurtosis_left / size_left;
 
+    return kurtosis_left;
+}
+
+double stats2::kurtosis_right_fun()
+{
+    //calculate kurtosis
+    kurtosis_right = 0;
+
+    avg_right = mean_right_fun();
+    std_dev_right = std_dev_right_fun();
+
+    //(4th central moment / standard deviation) ^ 4, where 4th central moment is
+    // number[i]-avg_numbers
     for (auto o2 : right_column)//for 2nd column
     {
         kurtosis_right += pow((o2 - avg_right) / std_dev_right, 4);//normalized 4th moment
     }
-
-    kurtosis_left = kurtosis_left / size_left;
     kurtosis_right = kurtosis_right / size_right;
+    return kurtosis_right;
+}
+
+void stats2::count_kurtosis()//count kurtosis
+{
+    kurtosis_left = kurtosis_left_fun();
+    kurtosis_right = kurtosis_right_fun();
 
     if(two_column_mode == true)
     {
@@ -245,52 +295,30 @@ void stats2::count_kurtosis()//count kurtosis
 
 }
 
+double stats2::CV_left_fun()
+{
+    std_dev_left = std_dev_left_fun();
+    avg_left = mean_left_fun();
+
+    CV_left = (std_dev_left / avg_left) * 100;
+    return CV_left;
+}
+
+double stats2::CV_right_fun()
+{
+    std_dev_right = std_dev_right_fun();
+    avg_right = mean_right_fun();
+
+    CV_right = (std_dev_right / avg_right) * 100;
+    return CV_right;
+}
+
 void stats2::count_CV()//coefficient of variation : standard_deviation/mean * 100%
 {
-    int size_left = left_column.size();
-    int size_right = right_column.size();
+    CV_left = CV_left_fun();
+    CV_right = CV_right_fun();
 
-    double sum_left = 0;
-    double sum_right = 0;
-
-    //columns sum of elements
-    for (auto o1 : left_column)//left column
-    {
-        sum_left += o1;
-    }
-    for (auto o2 : right_column)//right column
-    {
-        sum_right += o2;
-    }
-
-    double avg_left = sum_left / size_left;//mean for left column
-    double avg_right = sum_right / size_right;//mean for right column
-
-    //variance
-    double variance_left = 0;
-    double variance_right = 0;
-
-    for (auto o1 : left_column)//variance for left column
-    {
-        variance_left += pow(o1 - avg_left, 2);
-    }
-    for (auto o2 : right_column)//variance for right column
-    {
-        variance_right += pow(o2 - avg_right, 2);
-    }
-
-    //divide by number of elements in column
-    variance_left = variance_left / size_left;
-    variance_right = variance_right / size_right;
-
-    double std_dev_left = sqrt(variance_left);//standard deviation for left
-    double std_dev_right = sqrt(variance_right);//standard deviation for right
-
-    //count CV
-    double CV_left = (std_dev_left / avg_left) * 100;
-    double CV_right = (std_dev_right / avg_right) * 100;
-
-    // Wyświetlenie wyników
+    //display results
     if (two_column_mode == true)
     {
         if (all_numbers_left == true && all_numbers_right == true)
@@ -327,66 +355,38 @@ void stats2::count_CV()//coefficient of variation : standard_deviation/mean * 10
 
     dataDisplay->setText(message1);
 }
-void stats2::count_skewness()//count skewness: (x[i] - x_mean)^3 / (N-1)*standard_deviation^3
+
+double stats2::skewness_left_fun()
 {
-    int size_left = left_column.size();
-    int size_right = right_column.size();
-
-    double sum_left=0;
-    double sum_right=0;
-
-    for(auto o1 : left_column)
-    {
-        sum_left+=o1;
-    }
-
-    for(auto o2 : right_column)
-    {
-        sum_right+=o2;
-    }
-
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
-
-
-    //Calculate variance
-    double variance_left = 0;
-    double variance_right = 0;
-
-    for (auto o1 : left_column)//variance for 1st column
-    {
-        variance_left += pow(o1 - avg_left, 2);
-    }
-
-    for (auto o2 : right_column)//variance for 2nd column
-    {
-        variance_right += pow(o2 - avg_right, 2);
-    }
-
-    variance_left = variance_left/size_left;
-    variance_right = variance_right/size_right;
-
-    //calculate standard deviation as sqrt of variance
-    double std_dev_left = sqrt(variance_left);
-    double std_dev_right = sqrt(variance_right);
-
     //calculate skewness
-    double skewness_left=0;
-    double skewness_right=0;
-
+    skewness_left=0;
+    avg_left=mean_left_fun();
 
     for (auto o1 : left_column)//skewness for 1st column
     {
         skewness_left += pow(o1 - avg_left, 3);
     }
+    return skewness_left;
+}
+
+double stats2::skewness_right_fun()
+{
+    //calculate skewness
+    skewness_right=0;
+    avg_right = mean_right_fun();
 
     for (auto o2 : right_column)//skewness for 2nd column
     {
         skewness_right += pow(o2 - avg_right, 3);
     }
+    return skewness_right;
+}
 
-    skewness_left = skewness_left / ((size_left - 1) * pow(std_dev_left, 3));
-    skewness_right = skewness_right / ((size_right - 1) * pow(std_dev_right, 3));
+void stats2::count_skewness()//count skewness: (x[i] - x_mean)^3 / (N-1)*standard_deviation^3
+{
+
+    skewness_left = skewness_left_fun();
+    skewness_right = skewness_right_fun();
 
     if(two_column_mode == true)
     {
@@ -426,8 +426,8 @@ void stats2::count_skewness()//count skewness: (x[i] - x_mean)^3 / (N-1)*standar
 
 void stats2::count_element_sum()//count element sum
 {
-    double sum_left=0;
-    double sum_right=0;
+    sum_left=0;
+    sum_right=0;
 
     for(auto o1 : left_column)
     {
@@ -478,15 +478,15 @@ void stats2::count_element_sum()//count element sum
 void stats2::count_min_max_diff()//count difference between  min max value
 {
     //for 1 column mode
-    double range_min_left = *min_element(left_column.begin(), left_column.end());
-    double range_max_left = *max_element(left_column.begin(), left_column.end());
-    double left_diff = abs(range_max_left - range_min_left);
+    range_min_left = *min_element(left_column.begin(), left_column.end());
+    range_max_left = *max_element(left_column.begin(), left_column.end());
+    left_diff = abs(range_max_left - range_min_left);
 
     if(two_column_mode == true)
     {
-        double range_min_right = *min_element(right_column.begin(), right_column.end());
-        double range_max_right = *max_element(right_column.begin(), right_column.end());
-        double right_diff = abs(range_max_right - range_min_right);
+        range_min_right = *min_element(right_column.begin(), right_column.end());
+        range_max_right = *max_element(right_column.begin(), right_column.end());
+        right_diff = abs(range_max_right - range_min_right);
 
         if(all_numbers_left == true && all_numbers_right == true)
         {
@@ -522,43 +522,30 @@ void stats2::count_min_max_diff()//count difference between  min max value
     dataDisplay->setText(message1);
 }
 
-void stats2::count_MAD()//count MAD- abs(xi - x_mean)/probe_amounts
-{
-    int size_left = left_column.size();
-    int size_right = right_column.size();
 
-    double sum_left=0;
-    double sum_right=0;
-
-    for(auto o1 : left_column)
-    {
-        sum_left+=o1;
-    }
-
-    for(auto o2 : right_column)
-    {
-        sum_right+=o2;
-    }
-
-    double avg_left = sum_left/size_left;
-    double avg_right = sum_right/size_right;
-
-    double mad_left=0;
-    double mad_right=0;
-
-
+double stats2::MAD_left_fun(){
+    avg_left=mean_left_fun();
     //count MAD
     for (double val : left_column)
     {
         mad_left += abs(val - avg_left);
     }
     mad_left /= size_left;
+    return mad_left;
+}
 
+double stats2::MAD_right_fun(){
+    avg_right = mean_right_fun();
+    //count MAD
     for (double val : right_column)
     {
         mad_right += abs(val - avg_right);
     }
     mad_right /= size_right;
+    return mad_right;
+}
+void stats2::count_MAD()//count MAD- abs(xi - x_mean)/probe_amounts
+{
 
     if(two_column_mode == true)
     {

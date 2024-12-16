@@ -591,6 +591,7 @@ void stats1::count_amount_of_numbers()
 
 void stats1::clear_chat()
 {
+    message1 = " ";
     dataDisplay->clear();
 }
 

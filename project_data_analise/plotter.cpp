@@ -229,6 +229,7 @@ void plotter::Plot6()//draw y time diagram
 
 void plotter::clearPlot()
 {
+    message1 = " ";
     chart->removeAllSeries();
     dataAnalysisLabel->clear();
     chart->createDefaultAxes();

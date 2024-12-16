@@ -21,7 +21,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     exit_button = new QPushButton("Exit app...", this);//leave from app
     exit_button->setFont(font);
     exit_button->setStyleSheet("color: yellow;");
-    exit_button->setGeometry(30, 770, 360, 70);
+    exit_button->setGeometry(30, 770, 180, 70);
     connect(exit_button, &QPushButton::clicked, this, &mainapp::exitApp);
 
     //Add frame based on QLabel
@@ -107,7 +107,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
 
     //white background colour, black 1px wide frame around, black font of messages - display
     dataDisplay->setStyleSheet("background-color: white;color: black; border: 1px solid black;");
-    dataDisplay->setText("You will see your data here, on the screen...");
+    dataDisplay->setText("Before going to stats, display data... \n\nYou will see your data here, on the screen...");
 
     dataDisplay->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with horisontal scroll
     dataDisplay->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with vertical scroll
@@ -136,6 +136,12 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     stats2Button->setStyleSheet("color: yellow;");
     stats2Button->setGeometry(10, 560, 275, 70);
     connect(stats2Button, &QPushButton::clicked, this, &mainapp::stats2_page);
+
+    clear_chat_button = new QPushButton("Clear...", this);
+    clear_chat_button->setFont(font);
+    clear_chat_button->setStyleSheet("color: yellow;");
+    clear_chat_button->setGeometry(230, 770, 160, 70);
+    connect(clear_chat_button, &QPushButton::clicked, this, &mainapp::clear_chat);
 }
 
 void mainapp::paintEvent(QPaintEvent *event) {
@@ -303,4 +309,9 @@ void mainapp::plotter_page()
     plott->setAttribute(Qt::WA_DeleteOnClose);
     plott->show();
     this->close();
+}
+
+void mainapp::clear_chat()
+{
+    dataDisplay->clear();
 }

@@ -38,6 +38,8 @@ private slots:
     void stats1_page();//go to page stats1
     void stats2_page();//go to page stats2
     void plotter_page();//go to plotter
+    void clear_chat();//clear chat
+
 private:
     QPixmap background;//Background txt
     QPushButton *exit_button;//exit app
@@ -59,6 +61,7 @@ private:
     QPushButton *plotterButton;//plotting
     QPushButton *stats1Button;//1st part of analisys
     QPushButton *stats2Button;//2nd part of analisys
+    QPushButton *clear_chat_button;//button for chat clearing
     bool all_numbers_left=false;//if data if numerical type
     bool all_numbers_right=false;//if data if numerical type
     bool two_column_mode;//if 2 columns mode, then true

@@ -197,7 +197,7 @@ void plotter::Plot1()// Draw x y diagram
 
     //create new data plot
     QLineSeries *series = new QLineSeries();
-    //series->setColor(Qt::red);
+    series->setColor(Qt::red);
 
     //add points based on vectors value
     for (int i = 0; i < left_column.size(); i++) {//columns are the same size
@@ -210,8 +210,8 @@ void plotter::Plot1()// Draw x y diagram
 
     //actualise axes
     chart->createDefaultAxes();
-    chart->axes(Qt::Horizontal).first()->setTitleText("Column 1 (X)");
-    chart->axes(Qt::Vertical).first()->setTitleText("Column 2 (Y)");
+    chart->axes(Qt::Horizontal).first()->setTitleText("Column 1");
+    chart->axes(Qt::Vertical).first()->setTitleText("Column 2");
 
     //give information if finished
     dataAnalysisLabel->setText("Plot generated: f(x, y)");
@@ -221,27 +221,158 @@ void plotter::Plot1()// Draw x y diagram
 
 void plotter::Plot2()//draw y x diagram
 {
+    error_inform();//this plot base on x and y - is sth wrong inform about error
 
+    if(two_column_mode == true){
+
+        //remove old series (plot)
+        chart->removeAllSeries();
+
+        //create new data plot
+        QLineSeries *series = new QLineSeries();
+        series->setColor(Qt::red);
+
+        //add points based on vectors value
+        for (int i = 0; i < left_column.size(); i++) {//columns are the same size
+            series->append(right_column[i],left_column[i]);
+        }
+
+        //add data series do chart
+        chart->addSeries(series);
+        chart->setTitle("Plot: f(y,x)");
+
+        //actualise axes
+        chart->createDefaultAxes();
+        chart->axes(Qt::Horizontal).first()->setTitleText("Column 2");
+        chart->axes(Qt::Vertical).first()->setTitleText("Column 1)");
+
+        //give information if finished
+        dataAnalysisLabel->setText("Plot generated: f(y, x)");
+    }
 }
 
 void plotter::Plot3()//draw time x diagram
 {
+    if(!left_column.empty())
+    {
+    //Remove previous series
+    chart->removeAllSeries();
 
+    QLineSeries *series = new QLineSeries();
+    series->setColor(Qt::red);
+
+    //sample index is t
+    for (int i = 0; i < left_column.size(); i++) {
+        series->append(i+1, left_column[i]); // i represents the sample number
+    }
+
+    chart->addSeries(series);
+    chart->setTitle("Plot: f(t, x)");
+
+    chart->createDefaultAxes();
+    chart->axes(Qt::Horizontal).first()->setTitleText("Sample number(t)");
+    chart->axes(Qt::Vertical).first()->setTitleText("Column 1");
+
+    dataAnalysisLabel->setText("Plot generated: f(t, x)");
+    }
+    else
+    {
+        dataAnalysisLabel->setText("Left column is empty...");
+        QMessageBox::critical(this, "Error", "Left column can not be empty!!!");
+    }
 }
 
 void plotter::Plot4()//draw time y diagram
 {
+    if(!right_column.empty())
+    {
+        //Remove previous series
+        chart->removeAllSeries();
 
+        QLineSeries *series = new QLineSeries();
+        series->setColor(Qt::red);
+
+        //sample index is t
+        for (int i = 0; i < left_column.size(); i++) {
+            series->append(i+1, right_column[i]); // i represents the sample number
+        }
+
+        chart->addSeries(series);
+        chart->setTitle("Plot: f(t, y)");
+
+        chart->createDefaultAxes();
+        chart->axes(Qt::Horizontal).first()->setTitleText("Sample number(t)");
+        chart->axes(Qt::Vertical).first()->setTitleText("Column 2");
+
+        dataAnalysisLabel->setText("Plot generated: f(t, y)");
+    }
+    else
+    {
+        dataAnalysisLabel->setText("Right column is empty...");
+        QMessageBox::critical(this, "Error", "Right column can not be empty!!!");
+    }
 }
 
 void plotter::Plot5()//draw x time diagram
 {
+    if(!left_column.empty())
+    {
+        //Remove previous series
+        chart->removeAllSeries();
 
+        QLineSeries *series = new QLineSeries();
+        series->setColor(Qt::red);
+
+        //sample index is t
+        for (int i = 0; i < left_column.size(); i++) {
+            series->append(left_column[i],i+1); // i represents the sample number
+        }
+
+        chart->addSeries(series);
+        chart->setTitle("Plot: f(x, t)");
+
+        chart->createDefaultAxes();
+        chart->axes(Qt::Horizontal).first()->setTitleText("Column 1");
+        chart->axes(Qt::Vertical).first()->setTitleText("Sample number(t)");
+
+        dataAnalysisLabel->setText("Plot generated: f(x, t)");
+    }
+    else
+    {
+        dataAnalysisLabel->setText("Left column is empty...");
+        QMessageBox::critical(this, "Error", "Left column can not be empty!!!");
+    }
 }
 
 void plotter::Plot6()//draw y time diagram
 {
+    if(!right_column.empty())
+    {
+        //Remove previous series
+        chart->removeAllSeries();
 
+        QLineSeries *series = new QLineSeries();
+        series->setColor(Qt::red);
+
+        //sample index is t
+        for (int i = 0; i < left_column.size(); i++) {
+            series->append(right_column[i],i+1); // i represents the sample number
+        }
+
+        chart->addSeries(series);
+        chart->setTitle("Plot: f(y, t)");
+
+        chart->createDefaultAxes();
+        chart->axes(Qt::Horizontal).first()->setTitleText("Column 2");
+        chart->axes(Qt::Vertical).first()->setTitleText("Sample number(t)");
+
+        dataAnalysisLabel->setText("Plot generated: f(y, t)");
+    }
+    else
+    {
+        dataAnalysisLabel->setText("Right column is empty...");
+        QMessageBox::critical(this, "Error", "Right column can not be empty!!!");
+    }
 }
 
 void plotter::clearPlot()

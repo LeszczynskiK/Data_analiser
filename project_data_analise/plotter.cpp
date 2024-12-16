@@ -27,22 +27,21 @@ plotter::plotter(const vector<double> left,const vector<double> right,bool allLe
 
     int frame_x_size=x/2+130;//frame x_size
     int frame_y_size=y/2 + 370;//frame y_size
+
+    //drawing area and plot space is connected... one under second
     //Drawing area
     chart = new QChart();
     chartView = new QChartView(chart, this);
     chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setGeometry(600+10, 30+10, frame_x_size-20, frame_y_size-20);//size of view
-    chartView->setStyleSheet("background-color: white; color:black;border: 1px solid black;");
-    chartView->raise();
-    chart->setBackgroundVisible(true);
-    chart->setBackgroundBrush(QBrush(QColor("grey")));//QBrush will paint on view of data information
-    //this is priority bigger than QLabel
+    chartView->setGeometry(600+10, 30+10+(frame_y_size-20)*0.13, frame_x_size-20, (frame_y_size-20)*0.87);
+    chartView->setStyleSheet("background-color: white; color:black");
+    chartView->show();
 
-    //this layer under chartView so it will not block plot view
-    dataAnalysisLabel = new QLabel(this);//for information about data status
+    //Information text area
+    dataAnalysisLabel = new QLabel(this);
     dataAnalysisLabel->setFont(font_stats);
-    dataAnalysisLabel->setStyleSheet("background-color: white; color: black; border: 1px solid black;");
-    dataAnalysisLabel->setGeometry(600+10, 30+10, frame_x_size-20, frame_y_size-20); // Position and size
+    dataAnalysisLabel->setStyleSheet("background-color: white; color: black");
+    dataAnalysisLabel->setGeometry(600+10, 30+10, frame_x_size-20, (frame_y_size-20)*0.13);
     dataAnalysisLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     displayDataAnalysis();
 
@@ -165,40 +164,58 @@ void plotter::displayDataAnalysis()//analisys about mode selection
     dataAnalysisLabel->setText(message);
 }
 
+void plotter::error_inform(){
+    //If 2 column mode is choosen
+    if (!two_column_mode || left_column.empty() || right_column.empty()) {
+        dataAnalysisLabel->setText("Error: Cannot plot - two column mode is required and columns cannot be empty.");
+        if(!two_column_mode)
+        {
+            QMessageBox::critical(this, "Error", "Two column mode is required!!!");
+        }
+        else if(left_column.empty())
+        {
+            QMessageBox::critical(this, "Error", "Left column can not be empty!!!");
+        }
+        else if(right_column.empty())
+        {
+            QMessageBox::critical(this, "Error", "Right column can not be empty!!!");
+        }
+    }
+}
+
 //x is 1st choosen column, y is 2nd choosen column
 //if only 1 column mode - impossible to draw(schow information on board)
 void plotter::Plot1()// Draw x y diagram
 {
-    //If 2 column mode is choosen
-    if (!two_column_mode || left_column.empty() || right_column.empty()) {
-        dataAnalysisLabel->setText("Error: Cannot plot - two column mode is required and columns cannot be empty.");
-        return;
-    }
+
+    error_inform();//this plot base on x and y - is sth wrong inform about error
+
+    if(two_column_mode == true){
 
     //remove old series (plot)
     chart->removeAllSeries();
 
     //create new data plot
     QLineSeries *series = new QLineSeries();
+    //series->setColor(Qt::red);
 
     //add points based on vectors value
-    for (auto i = 0; i < left_column.size(); i++) {//columns are the same size
+    for (int i = 0; i < left_column.size(); i++) {//columns are the same size
         series->append(left_column[i], right_column[i]);
     }
 
     //add data series do chart
     chart->addSeries(series);
+    chart->setTitle("Plot: f(x,y)");
 
     //actualise axes
     chart->createDefaultAxes();
     chart->axes(Qt::Horizontal).first()->setTitleText("Column 1 (X)");
     chart->axes(Qt::Vertical).first()->setTitleText("Column 2 (Y)");
 
-    //title of chart
-    chart->setTitle("Plot: f(x, y)");
-
     //give information if finished
     dataAnalysisLabel->setText("Plot generated: f(x, y)");
+    }
 }
 
 
@@ -229,8 +246,9 @@ void plotter::Plot6()//draw y time diagram
 
 void plotter::clearPlot()
 {
-    message1 = " ";
-    chart->removeAllSeries();
+    message1 = " ";//clear chat
     dataAnalysisLabel->clear();
+
+    chart->removeAllSeries();//clear plots
     chart->createDefaultAxes();
 }

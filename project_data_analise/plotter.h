@@ -36,6 +36,7 @@ private slots:
     void Plot5();
     void Plot6();
 
+    void error_inform();//if something is wrong with data,inform
     void clearPlot();
 
 private:

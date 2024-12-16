@@ -45,7 +45,7 @@ stats1::stats1(const vector<double> left,const vector<double> right,bool allLeft
 
     //display data field(screen)
     dataDisplay = new QTextEdit(this);
-    dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);;
+    dataDisplay->setGeometry(600+10, 30+10, frame_x-20, frame_y-20);
     dataDisplay->setFont(font_stats);
     dataDisplay->setReadOnly(true);//only to read
     dataDisplay->setStyleSheet("background-color: white;color: black; border: 1px solid black;");//background colour and font colour

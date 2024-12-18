@@ -184,14 +184,16 @@ void plotter::error_inform(){
 //if only 1 column mode - impossible to draw(schow information on board)
 void plotter::Plot1()// Draw x y diagram
 {
-
-    error_inform();//this plot base on x and y - is sth wrong inform about error
-
-    if(two_column_mode == true){
-
-    //remove old series (plot)
+    //Remove previous series
     chart->removeAllSeries();
 
+    //if any data is not correct - inform
+    if (!two_column_mode || left_column.empty() || right_column.empty() || !all_numbers_left || !all_numbers_right) {
+        error_inform();
+        return;
+    }
+
+    if(two_column_mode == true){
     //create new data plot
     series = new QLineSeries();
     series->setColor(Qt::red);
@@ -218,13 +220,16 @@ void plotter::Plot1()// Draw x y diagram
 
 void plotter::Plot2()//draw y x diagram
 {
-    error_inform();//this plot base on x and y - is sth wrong inform about error
+    //Remove previous series
+    chart->removeAllSeries();
+
+    //if any data is not correct - inform
+    if (!two_column_mode || left_column.empty() || right_column.empty() || !all_numbers_left || !all_numbers_right) {
+        error_inform();
+        return;
+    }
 
     if(two_column_mode == true){
-
-        //remove old series (plot)
-        chart->removeAllSeries();
-
         //create new data plot
         series = new QLineSeries();
         series->setColor(Qt::red);
@@ -250,11 +255,11 @@ void plotter::Plot2()//draw y x diagram
 
 void plotter::Plot3()//draw time x diagram
 {
-    if(!left_column.empty())
-    {
     //Remove previous series
     chart->removeAllSeries();
 
+    if(!left_column.empty())
+    {
     series = new QLineSeries();
     series->setColor(Qt::red);
 
@@ -281,16 +286,16 @@ void plotter::Plot3()//draw time x diagram
 
 void plotter::Plot4()//draw time y diagram
 {
+    //Remove previous series
+    chart->removeAllSeries();
+
     if(!right_column.empty())
     {
-        //Remove previous series
-        chart->removeAllSeries();
-
-        series = new QLineSeries();
+         series = new QLineSeries();
         series->setColor(Qt::red);
 
         //sample index is t
-        for (int i = 0; i < left_column.size(); i++) {
+        for (int i = 0; i < right_column.size(); i++) {
             series->append(i+1, right_column[i]); // i represents the sample number
         }
 
@@ -312,11 +317,11 @@ void plotter::Plot4()//draw time y diagram
 
 void plotter::Plot5()//draw x time diagram
 {
+    //Remove previous series
+    chart->removeAllSeries();
+
     if(!left_column.empty())
     {
-        //Remove previous series
-        chart->removeAllSeries();
-
         series = new QLineSeries();
         series->setColor(Qt::red);
 
@@ -343,16 +348,16 @@ void plotter::Plot5()//draw x time diagram
 
 void plotter::Plot6()//draw y time diagram
 {
+     //Remove previous series
+    chart->removeAllSeries();
+
     if(!right_column.empty())
     {
-        //Remove previous series
-        chart->removeAllSeries();
-
         series = new QLineSeries();
         series->setColor(Qt::red);
 
         //sample index is t
-        for (int i = 0; i < left_column.size(); i++) {
+        for (int i = 0; i < right_column.size(); i++) {
             series->append(right_column[i],i+1); // i represents the sample number
         }
 

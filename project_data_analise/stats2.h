@@ -77,8 +77,8 @@ private:
     double kurtosis_right;
     double CV_left;
     double CV_right;
-    double skewness_left;
-    double skewness_right;
+    long double skewness_left;
+    long double skewness_right;
     double range_min_left;
     double range_max_left;
     double left_diff;
@@ -102,8 +102,8 @@ private:
     double kurtosis_right_fun();
     double CV_left_fun();
     double CV_right_fun();
-    double skewness_left_fun();
-    double skewness_right_fun();
+    long double skewness_left_fun();
+    long double skewness_right_fun();
     double MAD_left_fun();
     double MAD_right_fun();
 };

@@ -18,10 +18,10 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     QFont font_screen;
     font_screen.setPointSize(14);//Font size -all font size
 
-    exit_button = new QPushButton("Exit app...", this);//leave from app
+    exit_button = new QPushButton("Exit app", this);//leave from app
     exit_button->setFont(font);
     exit_button->setStyleSheet("color: yellow;");
-    exit_button->setGeometry(30, 770, 180, 70);
+    exit_button->setGeometry(10, 770, 160, 70);
     connect(exit_button, &QPushButton::clicked, this, &mainapp::exitApp);
 
     //Add frame based on QLabel
@@ -137,11 +137,17 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     stats2Button->setGeometry(10, 560, 275, 70);
     connect(stats2Button, &QPushButton::clicked, this, &mainapp::stats2_page);
 
-    clear_chat_button = new QPushButton("Clear...", this);
+    clear_chat_button = new QPushButton("Clear chat", this);
     clear_chat_button->setFont(font);
     clear_chat_button->setStyleSheet("color: yellow;");
-    clear_chat_button->setGeometry(230, 770, 160, 70);
+    clear_chat_button->setGeometry(180, 770, 170, 70);
     connect(clear_chat_button, &QPushButton::clicked, this, &mainapp::clear_chat);
+
+    change_csv_button = new QPushButton("Change .csv", this);
+    change_csv_button->setFont(font);
+    change_csv_button->setStyleSheet("color: yellow;");
+    change_csv_button->setGeometry(360, 770, 200, 70);
+    connect(change_csv_button, &QPushButton::clicked, this, &mainapp::change_csv);
 }
 
 void mainapp::paintEvent(QPaintEvent *event) {
@@ -157,15 +163,17 @@ void mainapp::exitApp()
 
 void mainapp::selectFile()
 {
-    QString filePath = QFileDialog::getOpenFileName(this, "Select CSV file", "", "CSV Files (*.csv)");//use .csv
     if (filePath.isEmpty()) {
-        return;
+        filePath = QFileDialog::getOpenFileName(this, "Select CSV file", "", "CSV Files (*.csv)");//use .csv
+        //Store the file path for further processing
+        csvFilePath = filePath;
+        qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
+        QMessageBox::information(this, "Success", ".csv has been loaded succesfully...");
     }
-
-    //Store the file path for further processing
-    csvFilePath = filePath;
-    qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
-
+    else
+    {
+        QMessageBox::warning(this, "ERROR! Click change csv button", "path is not empty now...");
+    }
 }
 
 void mainapp::toggleDoubleColumn(bool checked)
@@ -277,13 +285,29 @@ void mainapp::displaySelectedData() {
     }
 //---------------------------------------------------------------------
 
-    file.close();//close .csv
+   file.close();//close .csv
 
     if (lines.isEmpty()) {//if empty
         QMessageBox::warning(this, "Warning", "No valid data found in the specified range.");
     }
     dataDisplay->clear();
     dataDisplay->setText(lines.join("\n"));
+}
+
+void mainapp::change_csv()//delete choosen file (clear path)
+{
+    csvFilePath.clear();
+    QMessageBox::information(this, "Success", ".csv path is empty now...");
+
+     QString filePath = QFileDialog::getOpenFileName(this, "Select CSV file", "", "CSV Files (*.csv)");//use .csv
+     if (filePath.isEmpty()) {
+         return;
+     }
+
+     //Store the file path for further processing
+     csvFilePath = filePath;
+     qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
+     QMessageBox::information(this, "Success", ".csv has been loaded succesfully...");
 }
 
 void mainapp::stats1_page()

@@ -356,7 +356,7 @@ void stats2::count_CV()//coefficient of variation : standard_deviation/mean * 10
     dataDisplay->setText(message1);
 }
 
-double stats2::skewness_left_fun()
+long double stats2::skewness_left_fun()
 {
     //calculate skewness
     skewness_left=0;
@@ -364,12 +364,12 @@ double stats2::skewness_left_fun()
 
     for (auto o1 : left_column)//skewness for 1st column
     {
-        skewness_left += pow(o1 - avg_left, 3);
+        skewness_left += static_cast<long double>(pow(o1 - avg_left, 3));
     }
-    return skewness_left;
+    return static_cast<long double>(skewness_left);
 }
 
-double stats2::skewness_right_fun()
+long double stats2::skewness_right_fun()
 {
     //calculate skewness
     skewness_right=0;
@@ -377,9 +377,9 @@ double stats2::skewness_right_fun()
 
     for (auto o2 : right_column)//skewness for 2nd column
     {
-        skewness_right += pow(o2 - avg_right, 3);
+        skewness_right += static_cast<long double>(pow(o2 - avg_right, 3));
     }
-    return skewness_right;
+    return static_cast<long double>(skewness_right);
 }
 
 void stats2::count_skewness()//count skewness: (x[i] - x_mean)^3 / (N-1)*standard_deviation^3
@@ -477,29 +477,32 @@ void stats2::count_element_sum()//count element sum
 
 void stats2::count_min_max_diff()//count difference between  min max value
 {
-    //for 1 column mode
-    range_min_left = *min_element(left_column.begin(), left_column.end());
-    range_max_left = *max_element(left_column.begin(), left_column.end());
-    left_diff = abs(range_max_left - range_min_left);
-
     if(two_column_mode == true)
     {
-        range_min_right = *min_element(right_column.begin(), right_column.end());
-        range_max_right = *max_element(right_column.begin(), right_column.end());
-        right_diff = abs(range_max_right - range_min_right);
-
         if(all_numbers_left == true && all_numbers_right == true)
         {
+            range_min_left = *min_element(left_column.begin(), left_column.end());
+            range_max_left = *max_element(left_column.begin(), left_column.end());
+            left_diff = abs(range_max_left - range_min_left);
+            range_min_right = *min_element(right_column.begin(), right_column.end());
+            range_max_right = *max_element(right_column.begin(), right_column.end());
+            right_diff = abs(range_max_right - range_min_right);
             message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
             message1 += "abs(max_element,min_element) for 2nd column: \n"+to_string(right_diff)+"\n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
+            range_min_left = *min_element(left_column.begin(), left_column.end());
+            range_max_left = *max_element(left_column.begin(), left_column.end());
+            left_diff = abs(range_max_left - range_min_left);
             message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
+            range_min_right = *min_element(right_column.begin(), right_column.end());
+            range_max_right = *max_element(right_column.begin(), right_column.end());
+            right_diff = abs(range_max_right - range_min_right);
             message1 += "1st column is not numerical. \n";
             message1 += "abs(max_element,min_element) for 2nd column: \n"+to_string(right_diff)+"\n";
         }
@@ -512,6 +515,9 @@ void stats2::count_min_max_diff()//count difference between  min max value
     {
         if(all_numbers_left == true)
         {
+            range_min_left = *min_element(left_column.begin(), left_column.end());
+            range_max_left = *max_element(left_column.begin(), left_column.end());
+            left_diff = abs(range_max_left - range_min_left);
             message1 += "abs(max_element,min_element) for 1st column: \n"+to_string(left_diff)+"\n";
         }
         else
@@ -546,7 +552,8 @@ double stats2::MAD_right_fun(){
 }
 void stats2::count_MAD()//count MAD- abs(xi - x_mean)/probe_amounts
 {
-
+    mad_left = MAD_left_fun();
+    mad_right = MAD_right_fun();
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)

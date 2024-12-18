@@ -39,9 +39,11 @@ private slots:
     void stats2_page();//go to page stats2
     void plotter_page();//go to plotter
     void clear_chat();//clear chat
+    void change_csv();//delete saved link do choosen csv to enable choose other one
 
 private:
     QPixmap background;//Background txt
+    QString filePath;//url for csv path
     QPushButton *exit_button;//exit app
     QPushButton *selectFileButton;//choose .csv file button
     QString csvFilePath;//path to csv file
@@ -62,6 +64,7 @@ private:
     QPushButton *stats1Button;//1st part of analisys
     QPushButton *stats2Button;//2nd part of analisys
     QPushButton *clear_chat_button;//button for chat clearing
+    QPushButton *change_csv_button;
     bool all_numbers_left=false;//if data if numerical type
     bool all_numbers_right=false;//if data if numerical type
     bool two_column_mode;//if 2 columns mode, then true

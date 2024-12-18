@@ -416,24 +416,28 @@ void stats1::count_range()
     range_max_left=0;
     range_max_right=0;
 
-    range_min_left=*min_element(left_column.begin(),left_column.end());
-    range_min_right=*min_element(right_column.begin(),right_column.end());
-    range_max_left=*max_element(left_column.begin(),left_column.end());
-    range_max_right=*max_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
+            range_min_left=*min_element(left_column.begin(),left_column.end());
+            range_max_left=*max_element(left_column.begin(),left_column.end());
+            range_min_right=*min_element(right_column.begin(),right_column.end());
+            range_max_right=*max_element(right_column.begin(),right_column.end());
             message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
             message1 += "Range for 2nd column: \n"+to_string(range_min_right)+" to: "+to_string(range_max_right)+"\n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
+            range_min_left=*min_element(left_column.begin(),left_column.end());
+            range_max_left=*max_element(left_column.begin(),left_column.end());
             message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
+            range_min_right=*min_element(right_column.begin(),right_column.end());
+            range_max_right=*max_element(right_column.begin(),right_column.end());
             message1 += "1st column is not numerical. \n";
             message1 += "Range for 2nd column: \n"+to_string(range_min_right)+" to: "+to_string(range_max_right)+"\n";
         }
@@ -446,6 +450,8 @@ void stats1::count_range()
     {
         if(all_numbers_left == true)
         {
+            range_min_left=*min_element(left_column.begin(),left_column.end());
+            range_max_left=*max_element(left_column.begin(),left_column.end());
             message1 += "Range for 1st column: \n"+to_string(range_min_left)+" to: "+to_string(range_max_left)+"\n";
         }
         else
@@ -461,22 +467,24 @@ void stats1::count_min_value()
     min_left =0;//preinitialisation, becouse there is error without this
     min_right=0;
 
-    min_left=*min_element(left_column.begin(),left_column.end());
-    min_right=*min_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
+             min_left=*min_element(left_column.begin(),left_column.end());
+             min_right=*min_element(right_column.begin(),right_column.end());
             message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
             message1 += "Min element for 2nd column: \n"+to_string(min_right)+" \n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
+             min_left=*min_element(left_column.begin(),left_column.end());
             message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
+             min_right=*min_element(right_column.begin(),right_column.end());
             message1 += "1st column is not numerical. \n";
             message1 += "Min element for 2nd column: \n"+to_string(min_right)+" \n";
         }
@@ -489,6 +497,7 @@ void stats1::count_min_value()
     {
         if(all_numbers_left == true)
         {
+             min_left=*min_element(left_column.begin(),left_column.end());
             message1 += "Min element for 1st column: \n"+to_string(min_left)+" \n";
         }
         else
@@ -504,22 +513,24 @@ void stats1::count_max_value()
     max_left =0;//preinitialisation, becouse there is error without this
     max_right=0;
 
-    max_left=*max_element(left_column.begin(),left_column.end());
-    max_right=*max_element(right_column.begin(),right_column.end());
     if(two_column_mode == true)
     {
         if(all_numbers_left == true && all_numbers_right == true)
         {
+                max_left=*max_element(left_column.begin(),left_column.end());
+            max_right=*max_element(right_column.begin(),right_column.end());
             message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
             message1 += "Max element for 2nd column: \n"+to_string(max_right)+" \n";
         }
         else if(all_numbers_left == true && all_numbers_right == false)
         {
+                max_left=*max_element(left_column.begin(),left_column.end());
             message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
             message1 += "2nd column is not numerical. \n";
         }
         else if(all_numbers_left == false && all_numbers_right == true)
         {
+            max_right=*max_element(right_column.begin(),right_column.end());
             message1 += "1st column is not numerical. \n";
             message1 += "Max element for 2nd column: \n"+to_string(max_right)+" \n";
         }
@@ -532,6 +543,7 @@ void stats1::count_max_value()
     {
         if(all_numbers_left == true)
         {
+                max_left=*max_element(left_column.begin(),left_column.end());
             message1 += "Max element for 1st column: \n"+to_string(max_left)+" \n";
         }
         else

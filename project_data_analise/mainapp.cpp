@@ -1,5 +1,21 @@
 #include "mainapp.h"
 
+//pre-initialisation for static members - to remember choosen till the end of program working and till the user change
+QString mainapp::csvFilePath = " ";//keep path to csv in static to keep once choosen all the time
+vector<double> mainapp::left_column_vec = {};
+vector<double> mainapp::right_column_vec = {};
+bool mainapp::all_numbers_left = false;
+bool mainapp::all_numbers_right = false;
+bool mainapp::two_column_mode = false;
+int mainapp::column=1;//1st column number
+int mainapp::secondColumn=1;//2nd column number
+int mainapp::startRow=1;//start row in column
+int mainapp::endRow=1;//end row in column
+bool mainapp::columnOk=false;
+bool mainapp::startRowOk=false;
+bool mainapp::endRowOk=false;
+
+
 mainapp::mainapp(QWidget *parent) : QWidget(parent)
 {
     setWindowTitle("Data menager window");
@@ -90,7 +106,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     secondColumnLabel = new QLabel(": 2nd column", this);
     secondColumnLabel->setStyleSheet("color: yellow;");
     secondColumnLabel->setFont(font);
-    secondColumnLabel->setGeometry(x_box_start+gap+295, y_box_start, 210, 70);
+    secondColumnLabel->setGeometry(x_box_start+gap+295, y_box_start, 210, 50);
     secondColumnLabel->hide();
 
     secondColumnInput = new QLineEdit(this);
@@ -168,7 +184,9 @@ void mainapp::selectFile()
         //Store the file path for further processing
         csvFilePath = filePath;
         qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
+        if(!csvFilePath.isEmpty()){
         QMessageBox::information(this, "Success", ".csv has been loaded succesfully...");
+        }
     }
     else
     {
@@ -191,21 +209,21 @@ void mainapp::displaySelectedData() {
 
     //put inputs to variables from qlineedit
     bool columnOk, secondColumnOk, startRowOk, endRowOk;//if valid bool variables
-    int column = columnInput->text().toInt(&columnOk) - 1;//Adjust for 0-based indexing
-    int secondColumn = secondColumnInput->text().toInt(&secondColumnOk) - 1;//Second column
-    int startRow = rowStartInput->text().toInt(&startRowOk) - 1;
-    int endRow = rowEndInput->text().toInt(&endRowOk) - 1;
+    column = columnInput->text().toInt(&columnOk) - 1;//Adjust for 0-based indexing
+    secondColumn = secondColumnInput->text().toInt(&secondColumnOk) - 1;//Second column
+    startRow = rowStartInput->text().toInt(&startRowOk) - 1;
+    endRow = rowEndInput->text().toInt(&endRowOk) - 1;
 
     //check data correction
     qDebug() << "File path:" << csvFilePath;
     qDebug() << "Column:" << column << ", Start row:" << startRow << ", End row:" << endRow;
     qDebug() << "Second column:" << secondColumn << ", Double column enabled:" << doubleColumnRadio->isChecked();
 
-    if (!columnOk || !startRowOk || !endRowOk || startRow < 0 || endRow < startRow ||
-        (doubleColumnRadio->isChecked() && !secondColumnOk)) {
-        QMessageBox::warning(this, "Error", "Invalid input for column(s) or row range.");
-        return;
-    }
+    // if (!columnOk || !startRowOk || !endRowOk || startRow < 0 || endRow < startRow ||
+    //     (doubleColumnRadio->isChecked() && !secondColumnOk)) {
+    //     QMessageBox::warning(this, "Error", "Invalid input for column(s) or row range.");
+    //     return;
+    // }
 
     QFile file(csvFilePath);//put file
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -307,7 +325,6 @@ void mainapp::change_csv()//delete choosen file (clear path)
      //Store the file path for further processing
      csvFilePath = filePath;
      qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
-     QMessageBox::information(this, "Success", ".csv has been loaded succesfully...");
 }
 
 void mainapp::stats1_page()

@@ -46,15 +46,11 @@ private:
     QString filePath;//url for csv path
     QPushButton *exit_button;//exit app
     QPushButton *selectFileButton;//choose .csv file button
-    QString csvFilePath;//path to csv file
     QLabel *frame;//frame for display screen
     QLabel *columnLabel;//1st column number
     QLabel *rowStartLabel;//number of 1st element in row
     QLabel *rowEndLabel;//number of last element in row
     QLabel *secondColumnLabel;//if option yes - number of 2nd column
-    QLineEdit *columnInput;//columnt input
-    QLineEdit *rowStartInput;//start row input
-    QLineEdit *rowEndInput;//end row input
     QTextEdit *dataDisplay;//place to display data from .csv
     QRadioButton *singleColumnRadio;//switch to 1 columnt data management
     QRadioButton *doubleColumnRadio;//switch do 2 column data management
@@ -65,11 +61,24 @@ private:
     QPushButton *stats2Button;//2nd part of analisys
     QPushButton *clear_chat_button;//button for chat clearing
     QPushButton *change_csv_button;
-    bool all_numbers_left=false;//if data if numerical type
-    bool all_numbers_right=false;//if data if numerical type
-    bool two_column_mode;//if 2 columns mode, then true
-    vector<double> left_column_vec;//keep double type data from column 1st
-    vector<double> right_column_vec;//keep double type data from column 2nd
+    QLineEdit *columnInput;//columnt input
+    QLineEdit *rowStartInput;//start row input
+    QLineEdit *rowEndInput;//end row input
+
+    //static members for global sharing data
+    static QString csvFilePath;//path to csv file
+    static bool all_numbers_left;//if data if numerical type
+    static bool all_numbers_right;//if data if numerical type
+    static bool two_column_mode;//if 2 columns mode, then true
+    static vector<double> left_column_vec;//keep double type data from column 1st
+    static vector<double> right_column_vec;//keep double type data from column 2nd
+    static int column;//1st column number
+    static int secondColumn;//2nd column number
+    static int startRow;//start row in column
+    static int endRow;//end row in column
+    static bool columnOk;
+    static bool startRowOk;
+    static bool endRowOk;
 
 };
 

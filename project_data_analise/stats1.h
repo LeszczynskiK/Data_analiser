@@ -16,7 +16,6 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-
 class stats1 : public QWidget {
     Q_OBJECT
 public:

@@ -8,11 +8,8 @@ int main(int argc, char *argv[])
 
 
     //display authorisation window
-    //authorisation_page startWindow;
-    //startWindow.show();
-
-    mainapp MainApp;
-    MainApp.show();
+    authorisation_page startWindow;
+    startWindow.show();
 
     return app.exec();
 }

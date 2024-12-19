@@ -14,6 +14,8 @@ int mainapp::endRow=1;//end row in column
 bool mainapp::columnOk=false;
 bool mainapp::startRowOk=false;
 bool mainapp::endRowOk=false;
+bool mainapp::secondColumnOk=false;
+bool mainapp::change_dist=false;
 
 
 mainapp::mainapp(QWidget *parent) : QWidget(parent)
@@ -123,7 +125,7 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
 
     //white background colour, black 1px wide frame around, black font of messages - display
     dataDisplay->setStyleSheet("background-color: white;color: black; border: 1px solid black;");
-    dataDisplay->setText("Before going to stats, display data... \n\nYou will see your data here, on the screen...");
+    dataDisplay->setText("Before going to stats, display data... \n\nYou will see your data here, on the screen...\n");
 
     dataDisplay->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with horisontal scroll
     dataDisplay->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);//with vertical scroll
@@ -135,22 +137,26 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     showDataButton->setGeometry(295, 10, 275, 70);
     connect(showDataButton, &QPushButton::clicked, this, &mainapp::displaySelectedData);
 
+    const int y_start=440;
+    const int gap1=10;
+    const int y_size=70;
+
     plotterButton = new QPushButton("Plotter", this);
     plotterButton->setFont(font);
     plotterButton->setStyleSheet("color: yellow;");
-    plotterButton->setGeometry(10, 380, 275, 70);
+    plotterButton->setGeometry(10, y_start, 275, 70);
     connect(plotterButton, &QPushButton::clicked, this, &mainapp::plotter_page);
 
     stats1Button = new QPushButton("Math stats I", this);
     stats1Button->setFont(font);
     stats1Button->setStyleSheet("color: yellow;");
-    stats1Button->setGeometry(10, 470, 275, 70);
+    stats1Button->setGeometry(10, y_start+gap1+y_size, 275, 70);
     connect(stats1Button, &QPushButton::clicked, this, &mainapp::stats1_page);
 
     stats2Button = new QPushButton("Math stats II", this);
     stats2Button->setFont(font);
     stats2Button->setStyleSheet("color: yellow;");
-    stats2Button->setGeometry(10, 560, 275, 70);
+    stats2Button->setGeometry(10, y_start+2*gap1+2*y_size, 275, 70);
     connect(stats2Button, &QPushButton::clicked, this, &mainapp::stats2_page);
 
     clear_chat_button = new QPushButton("Clear chat", this);
@@ -164,6 +170,13 @@ mainapp::mainapp(QWidget *parent) : QWidget(parent)
     change_csv_button->setStyleSheet("color: yellow;");
     change_csv_button->setGeometry(360, 770, 200, 70);
     connect(change_csv_button, &QPushButton::clicked, this, &mainapp::change_csv);
+
+    area_change_button = new QPushButton("Enable column or row change", this);
+    area_change_button->setFont(font);
+    area_change_button->setStyleSheet("color: yellow;");
+    area_change_button->setGeometry(10, 280, 450, 70);
+    connect(area_change_button, &QPushButton::clicked, this, &mainapp::area_change);
+
 }
 
 void mainapp::paintEvent(QPaintEvent *event) {
@@ -207,6 +220,7 @@ void mainapp::displaySelectedData() {
         return;
     }
 
+    if(change_dist == true){
     //put inputs to variables from qlineedit
     bool columnOk, secondColumnOk, startRowOk, endRowOk;//if valid bool variables
     column = columnInput->text().toInt(&columnOk) - 1;//Adjust for 0-based indexing
@@ -219,11 +233,12 @@ void mainapp::displaySelectedData() {
     qDebug() << "Column:" << column << ", Start row:" << startRow << ", End row:" << endRow;
     qDebug() << "Second column:" << secondColumn << ", Double column enabled:" << doubleColumnRadio->isChecked();
 
-    // if (!columnOk || !startRowOk || !endRowOk || startRow < 0 || endRow < startRow ||
-    //     (doubleColumnRadio->isChecked() && !secondColumnOk)) {
-    //     QMessageBox::warning(this, "Error", "Invalid input for column(s) or row range.");
-    //     return;
-    // }
+    if (!columnOk || !startRowOk || !endRowOk || startRow < 0 || endRow < startRow ||
+        (doubleColumnRadio->isChecked() && !secondColumnOk)) {
+        QMessageBox::warning(this, "Error", "Invalid input for column(s) or row range.");
+        return;
+    }
+    }
 
     QFile file(csvFilePath);//put file
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
@@ -325,6 +340,23 @@ void mainapp::change_csv()//delete choosen file (clear path)
      //Store the file path for further processing
      csvFilePath = filePath;
      qDebug() << "Selected file:" << csvFilePath;//check if selection is ok
+}
+
+void mainapp::area_change()//enable to change column and row /not enable
+{
+    change_dist = !change_dist;//change condition of permittion to change column or row
+
+    if(change_dist == true)
+    {
+        dataDisplay->setText("You are able to change column and area value... \n \nRemember to turn off this mode before going to stats if you want to keep those values...\n\n\n\nTo save, display data on screen...\n");
+        area_change_button->setText("Column and row edit. -> Mode ON!");
+    }
+    if(change_dist == false)
+    {
+        dataDisplay->setText("You are not able to change row and column values... Your previous values are in memory!!!\n");
+        area_change_button->setText("Column and row edit. ->Mode OFF!");
+    }
+
 }
 
 void mainapp::stats1_page()

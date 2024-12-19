@@ -40,6 +40,7 @@ private slots:
     void plotter_page();//go to plotter
     void clear_chat();//clear chat
     void change_csv();//delete saved link do choosen csv to enable choose other one
+    void area_change();//change row or column number in csv display method
 
 private:
     QPixmap background;//Background txt
@@ -61,6 +62,7 @@ private:
     QPushButton *stats2Button;//2nd part of analisys
     QPushButton *clear_chat_button;//button for chat clearing
     QPushButton *change_csv_button;
+    QPushButton *area_change_button;//button for column and row change
     QLineEdit *columnInput;//columnt input
     QLineEdit *rowStartInput;//start row input
     QLineEdit *rowEndInput;//end row input
@@ -79,6 +81,8 @@ private:
     static bool columnOk;
     static bool startRowOk;
     static bool endRowOk;
+    static bool secondColumnOk;
+    static bool change_dist;//enable to change column or row
 
 };
 
